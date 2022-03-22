@@ -1,0 +1,7 @@
+services:
+  farm_loocc.loocc_client_factory:
+    class: Drupal\farm_loocc\LooccClientFactory
+    arguments: ['@config.factory']
+  farm_loocc.loocc_client:
+    class: Drupal\farm_loocc\LooccClient
+    factory: farm_loocc.loocc_client_factory:getAuthenticatedClient
