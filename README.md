@@ -28,13 +28,13 @@ Install as you would normally install a contributed drupal module.
 TODO: Are there good Dupal docs for this? Do we mention composer or?
 TODO: Link to releases.
 
-<!---
-Document any special configuration the module requires. For example:
-- API Keys
-- Additional settings options
-- External (client) configuration
--->
 ### Configuration
+
+A LOOC-C API key is required.
+
+> LOOC-C API is available by subscription. For pricing, please email us on
+> looc-c@csiro.au or use our contact details below. We look forward to
+> receiving your query and supporting your use of the LOOC-C API.
 
 <!---
 Document features the module provides.
