@@ -7,6 +7,12 @@ farmOS integration with the [LOOC-C](https://looc-c.farm/) calculator.
 This module is an add-on for the [farmOS](http://drupal.org/project/farm)
 distribution.
 
+> LOOC-C provides estimates of what carbon increase is possible so that you
+> can consider whether a project is viable based on project size and land
+> condition.
+
+For more information see [What is LOOC-C](https://looc-c.farm/about).
+
 <!---
 Geting started.
 -->
@@ -89,11 +95,11 @@ Include maintainers.
 ## Maintainers
 
 Current maintainers:
-- Full name (handle) - [profile](https://farmos.org)
+- Paul Weidner [@paul121](https://github.com/paul121)
 
 <!---
 Include sponsors.
 -->
 ## Sponsors
 This project has been sponsored by:
-- [Organization](https://farmos.org)
+- [Regen Digital](https://regenfarmersmutual.com/regendigital/)
