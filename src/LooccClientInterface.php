@@ -9,4 +9,12 @@ use GuzzleHttp\ClientInterface;
  */
 interface LooccClientInterface extends ClientInterface {
 
+  /**
+   * Helper function to ping the LOOC-C server.
+   *
+   * @return bool
+   *   Boolean indicating success.
+   */
+  public function ping(): bool;
+
 }

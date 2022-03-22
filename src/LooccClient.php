@@ -39,4 +39,12 @@ class LooccClient extends Client implements LooccClientInterface {
     parent::__construct($config);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function ping(): bool {
+    $res = $this->request('GET', 'lrf/ping');
+    return $res->getStatusCode() === 200;
+  }
+
 }
