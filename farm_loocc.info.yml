@@ -1,0 +1,5 @@
+name: LOOC-C
+type: module
+description: farmOS integration with LOOC-C calculator.
+package: farmOS Contrib
+core_version_requirement: ^9
