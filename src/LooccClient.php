@@ -21,6 +21,22 @@ class LooccClient extends Client implements LooccClientInterface {
   public static string $looccApiBaseUri = 'https://api.looc-c.farm/v1/';
 
   /**
+   * Valid project type ids.
+   *
+   * @var string[]
+   */
+  public static array $projectTypes = [
+    'NutrientManagementAcidityManagement',
+    'NutrientManagementNewIrrigation',
+    'NutrientManagementPastureRenovation',
+    'AcidityManagementNewIrrigation',
+    'AcidityManagementPasturerenovation',
+    'NewIrrigationPastureRenovation',
+    'StubbleRetention',
+    'ConversionToPasture',
+  ];
+
+  /**
    * LooccClient constructor.
    *
    * @param string $api_key

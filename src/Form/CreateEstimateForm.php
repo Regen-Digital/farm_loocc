@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\Checkboxes;
 use Drupal\Core\Url;
+use Drupal\farm_loocc\LooccClient;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -183,11 +184,10 @@ class CreateEstimateForm extends FormBase {
 
     // Assemble the batch operation for creating estimates.
     $operations = [];
-    $project_types = ['StubbleRetention', 'ConversionToPasture'];
     foreach ($assets as $asset_id => $asset) {
       $operations[] = [
         [self::class, 'createLooccEstimateBatch'],
-        [$asset_id, $project_types],
+        [$asset_id, LooccClient::$projectTypes],
       ];
     }
     $batch = [
