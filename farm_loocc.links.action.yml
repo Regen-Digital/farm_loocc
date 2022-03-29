@@ -1,0 +1,11 @@
+farm_loocc_create_estimate:
+  route_name: farm_loocc.create_estimate
+  title: 'Add fields'
+  appears_on:
+    - view.farm_loocc_estimates.page
+  options:
+    attributes:
+      class:
+        - 'use-ajax'
+      data-dialog-type: 'modal'
+      data-dialog-options: '{"height": "auto", "width": "auto"}'
