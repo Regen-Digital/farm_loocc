@@ -175,16 +175,32 @@ class LooccEstimate implements LooccEstimateInterface {
   /**
    * {@inheritdoc}
    */
-  public function getProjectArea(AssetInterface $asset): array {
+  public function getProjectArea(AssetInterface $asset) {
+
+    // Bail if the geometry is empty.
+    if ($asset->get('geometry')->isEmpty()) {
+      return FALSE;
+    }
 
     /** @var \Polygon $geom */
     $geom = $asset->get('geometry')->value;
     $geom = $this->geoPHP->load($geom);
 
+    // Bail if the geometry was not loaded.
+    if (empty($geom)) {
+      return FALSE;
+    }
+
     // Map points to the lat/lng that the LOOC-C API expects.
     $lat_longs = array_map(function (\Point $point) {
       return ['lat' => $point->y(), 'lng' => $point->x()];
     }, $geom->getPoints());
+
+    // Bail if the geometry had no points.
+    if (empty($lat_longs)) {
+      return FALSE;
+    }
+
     return $lat_longs;
   }
 
