@@ -1,0 +1,10 @@
+administer farm_loocc:
+  title: 'Administer farm_loocc module'
+
+view loocc estimates:
+  title: 'View LOOC-C estimates'
+  description: 'Access to view all LOOC-C estimates.'
+
+create loocc estimates:
+  title: 'Create LOOC-C estimates'
+  description: 'Access to create new LOOC-C estimates.'
