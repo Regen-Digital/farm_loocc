@@ -1,0 +1,142 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for farm_loocc.module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function farm_loocc_schema() {
+
+  // Build databse schema for farm_loocc tables.
+  $schema = [];
+
+  // Estimate base table.
+  $schema['farm_loocc_estimate'] = [
+    'description' => 'Base table for LOOC-C estimates.',
+    'fields' => [
+      'id' => [
+        'description' => 'Auto-incrementing identifier for the estimate.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'asset_id' => [
+        'description' => 'The location asset ID',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'timestamp' => [
+        'description' => 'Timestamp of the estimate creation.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'project_length' => [
+        'description' => 'The length of the project.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 25,
+      ],
+      'polygon_area' => [
+        'description' => 'The total polygon area used for carbon estimates.',
+        'type' => 'float',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ],
+      'bd_average' => [
+        'description' => 'The estimated average percent bulk density for the project area.',
+        'type' => 'float',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ],
+      'carbon_average' => [
+        'description' => 'The estimated average percent organic carbon for the project area.',
+        'type' => 'float',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ],
+      'warning_message' => [
+        'description' => 'Warning messages associated with the direct soil measurement estimates.',
+        'type' => 'text',
+        'not null' => FALSE,
+      ],
+    ],
+    'primary key' => [
+      'id',
+    ],
+    'indexes' => [
+      'id' => ['id'],
+      'asset_id' => ['asset_id'],
+    ],
+    // Foreign keys are only for documentation purposes.
+    'foreign keys' => [
+      'estimate_asset' => [
+        'table' => 'asset',
+        'columns' => ['asset_id' => 'id'],
+      ],
+    ],
+  ];
+
+  $schema['farm_loocc_accu_estimate'] = [
+    'description' => 'Individual LOOC-C ERF method and project type ACCU estimates.',
+    'fields' => [
+      'estimate_id' => [
+        'description' => 'The ID of the base LOOC-C estimate.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'method_id' => [
+        'description' => "The ID of the estimate's ERF method or project type.",
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+      ],
+      'annual' => [
+        'description' => 'The estimated annual ACCU sequestration rate.',
+        'type' => 'float',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ],
+      'project' => [
+        'description' => 'The estimated total ACCUs sequestered over the project duration.',
+        'type' => 'float',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ],
+      'warning_message' => [
+        'description' => 'Warning messages associated with the direct soil measurement estimates.',
+        'type' => 'text',
+        'not null' => FALSE,
+      ],
+    ],
+    'primary key' => [
+      'estimate_id',
+      'method_id',
+    ],
+    'indexes' => [
+      'estimate_id' => ['estimate_id'],
+    ],
+    // Foreign keys are only for documentation purposes.
+    'foreign keys' => [
+      'base_estimate' => [
+        'table' => 'farm_loocc_estimate',
+        'columns' => ['estimate_id' => 'id'],
+      ],
+    ],
+  ];
+
+  return $schema;
+}
