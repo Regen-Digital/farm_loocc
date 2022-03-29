@@ -17,10 +17,10 @@ interface LooccClientInterface extends ClientInterface {
    * @param array $project_area
    *   The project area coordinates.
    *
-   * @return array
-   *   Array of the bulk density and organic carbon estimates.
+   * @return array|false
+   *   Array of the soil estimates or FALSE if failure.
    */
-  public function carbonEstimate(array $project_area): array;
+  public function carbonEstimate(array $project_area);
 
   /**
    * Returns ACCU estimates for available ERF methods in a given project area.
@@ -30,10 +30,10 @@ interface LooccClientInterface extends ClientInterface {
    * @param int $project_length
    *   The project length in years, defaults to 25.
    *
-   * @return array
-   *   ACCU estimates for all available ERF methods.
+   * @return array|false
+   *   ACCU estimates for all available ERF methods or FALSE if failure.
    */
-  public function erfEstimates(array $project_area, int $project_length = 25): array;
+  public function erfEstimates(array $project_area, int $project_length = 25);
 
   /**
    * Returns the SA2 areas the given project area is located in.
@@ -41,10 +41,10 @@ interface LooccClientInterface extends ClientInterface {
    * @param array $project_area
    *   The project area coordinates.
    *
-   * @return array
-   *   Array of SA2 areas each containing the SA2 ID and area.
+   * @return array|false
+   *   Array of SA2 areas containing the SA2 ID and area or FALSE if failure.
    */
-  public function getSa2(array $project_area): array;
+  public function getSa2(array $project_area);
 
   /**
    * Helper function to ping the LOOC-C server.
@@ -66,9 +66,9 @@ interface LooccClientInterface extends ClientInterface {
    * @param bool $new_irrigation
    *   A boolean indicating if the project will acquire new irrigation methods.
    *
-   * @return array
+   * @return array|false
    *   Array of the ACCU estimates for the project types in the SA2 area.
    */
-  public function soilEstimate(int $sa2, int $land_area, array $project_types, bool $new_irrigation = TRUE): array;
+  public function soilEstimate(int $sa2, int $land_area, array $project_types, bool $new_irrigation = TRUE);
 
 }

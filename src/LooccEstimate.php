@@ -79,6 +79,11 @@ class LooccEstimate implements LooccEstimateInterface {
     // Carbon estimate.
     $carbon_estimates = $this->looccClient->carbonEstimate($project_area);
 
+    // Bail if any of the requests failed.
+    if (empty($erf_estimates) || empty($soil_estimates) || empty($carbon_estimates)) {
+      return FALSE;
+    }
+
     // Add the base estimate to the DB.
     $warning_message = implode(PHP_EOL, $carbon_estimates['warningMessages'] ?? []);
     $row = [

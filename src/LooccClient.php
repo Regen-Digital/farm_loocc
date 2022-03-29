@@ -4,6 +4,7 @@ namespace Drupal\farm_loocc;
 
 use Drupal\Component\Serialization\Json;
 use GuzzleHttp\Client;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Extends the Guzzle HTTP client with helper methods for the LOOC-C API.
@@ -43,21 +44,21 @@ class LooccClient extends Client implements LooccClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function carbonEstimate(array $project_area): array {
+  public function carbonEstimate(array $project_area) {
     $res = $this->request('POST', 'soil/direct', ['json' => $project_area]);
-    return Json::decode($res->getBody());
+    return $this->parseJsonFromResponse($res);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function erfEstimates(array $project_area, int $project_length = 25): array {
+  public function erfEstimates(array $project_area, int $project_length = 25) {
     $post = [
       'projectArea' => $project_area,
       'projectLength' => $project_length,
     ];
     $res = $this->request('POST', 'veg/all', ['json' => $post]);
-    return Json::decode($res->getBody());
+    return $this->parseJsonFromResponse($res);
   }
 
   /**
@@ -80,7 +81,7 @@ class LooccClient extends Client implements LooccClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function soilEstimate(int $sa2, int $land_area, array $project_types, bool $new_irrigation = TRUE): array {
+  public function soilEstimate(int $sa2, int $land_area, array $project_types, bool $new_irrigation = TRUE) {
     $post = [
       'sa2' => $sa2,
       'landArea' => $land_area,
@@ -88,7 +89,28 @@ class LooccClient extends Client implements LooccClientInterface {
       'newIrrigation' => $new_irrigation,
     ];
     $res = $this->request('POST', 'soil/estimate', ['json' => $post]);
-    return Json::decode($res->getBody());
+    return $this->parseJsonFromResponse($res);
+  }
+
+  /**
+   * Helper function to parse JSON from API responses.
+   *
+   * This function also serves some simple error handling.
+   *
+   * @param \Psr\Http\Message\ResponseInterface $response
+   *   The response object.
+   *
+   * @return array|false
+   *   Return the array or FALSE if an error ocurred.
+   */
+  protected function parseJsonFromResponse(ResponseInterface $response) {
+    $json = Json::decode($response->getBody());
+    if (isset($json['status'])) {
+      return FALSE;
+    }
+    else {
+      return $json;
+    }
   }
 
 }
