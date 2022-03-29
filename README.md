@@ -41,48 +41,15 @@ Document features the module provides.
 -->
 ## Features
 
-<!---
-Document features related to different entity types. For example:
-- Assets, logs, taxonomies, quantity types, data streams
-  - Base fields (added to all bundles)
-  - Bundle fields (added to single bundles)
-- Quick Forms
-- Field modules
-- Special logic
-- Other special features as needed
--->
-### Assets
+This module provides an integration with the LOOC-C API to create LRF ACCU
+estimates in bulk for farmOS Land Assets. These ACCU estimates are saved so
+that they can be viewed and compared with estimates across the entire farm at a
+later time.
 
-Adds fields to all asset types:
-- `example_1` (string): An example field.
-- `example_2` (string): Another example field.
-
-<!---
-Document features related to a single bundle.
--->
-#### Land assets
-
-Adds a new `example` land type for land assets.
-
-<!---
-Document any quick forms provided by this module.
--->
-### Quick Forms
-
-<!---
-Document any field modules provided by this module.
--->
-### Field Modules
-
-<!---
-Document any logic provided by this module.
--->
-### Logic
-
-<!---
-Document any other features provided by this module.
--->
-### Other
+- Form for creating estimates in bulk or individually
+- Table view of all estimates for comparing values.
+- TODO: Map of estimates.
+- TODO: Ability to save scenarios.
 
 <!---
 It might be nice to include a FAQ.
