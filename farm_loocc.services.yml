@@ -1,4 +1,7 @@
 services:
+  farm_loocc.estimate:
+    class: Drupal\farm_loocc\LooccEstimate
+    arguments: ['@database', '@datetime.time', '@geofield.geophp', '@farm_loocc.loocc_client']
   farm_loocc.loocc_client_factory:
     class: Drupal\farm_loocc\LooccClientFactory
     arguments: ['@config.factory']
