@@ -188,6 +188,59 @@ display:
           hide_alter_empty: true
           type: ul
           separator: ', '
+        new_irrigation:
+          id: new_irrigation
+          table: farm_loocc_estimate
+          field: new_irrigation
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: boolean
+          label: 'New irrigation'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          type: yes-no
+          type_custom_true: ''
+          type_custom_false: ''
+          not: false
         bd_average:
           id: bd_average
           table: farm_loocc_estimate
@@ -443,6 +496,45 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+        new_irrigation:
+          id: new_irrigation
+          table: farm_loocc_estimate
+          field: new_irrigation
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: boolean
+          operator: '='
+          value: All
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: 'New irrigation'
+            description: ''
+            use_operator: false
+            operator: new_irrigation_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: new_irrigation
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
       style:
         type: table
         options:
@@ -453,6 +545,7 @@ display:
             id: id
             name: name
             accu_estimates: accu_estimates
+            new_irrigation: new_irrigation
             bd_average: bd_average
             carbon_average: carbon_average
             warning_message: warning_message
@@ -474,6 +567,13 @@ display:
               responsive: ''
             accu_estimates:
               sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            new_irrigation:
+              sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
