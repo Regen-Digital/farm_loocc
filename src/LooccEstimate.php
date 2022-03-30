@@ -90,7 +90,7 @@ class LooccEstimate implements LooccEstimateInterface {
   /**
    * {@inheritdoc}
    */
-  public function createEstimate(AssetInterface $asset, array $project_types) {
+  public function createEstimate(AssetInterface $asset, array $project_types, array $project_metadata = []) {
 
     // Get the project area.
     $project_area = $this->getProjectArea($asset);
@@ -98,11 +98,16 @@ class LooccEstimate implements LooccEstimateInterface {
       return FALSE;
     }
 
+    // Add default project metatdata values.
+    $project_metadata += [
+      'new_irrigation' => FALSE,
+    ];
+
     // ERF Estimates.
     $erf_estimates = $this->looccClient->erfEstimates($project_area);
 
     // Soil estimates.
-    $soil_estimates = $this->soilEstimates($project_area, $project_types, TRUE);
+    $soil_estimates = $this->soilEstimates($project_area, $project_types, $project_metadata['new_irrigation']);
 
     // Carbon estimate.
     $carbon_estimates = $this->looccClient->carbonEstimate($project_area);
@@ -118,6 +123,7 @@ class LooccEstimate implements LooccEstimateInterface {
       'asset_id' => $asset->id(),
       'timestamp' => $this->time->getCurrentTime(),
       'project_length' => 25,
+      'new_irrigation' => $project_metadata['new_irrigation'],
       'polygon_area' => $carbon_estimates['polygonArea'],
       'bd_average' => $carbon_estimates['polygonBDAverage'],
       'carbon_average' => $carbon_estimates['polygonOCPercAverage'],

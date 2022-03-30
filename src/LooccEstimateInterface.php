@@ -16,11 +16,13 @@ interface LooccEstimateInterface {
    *   The asset to create the estimate for.
    * @param array $project_types
    *   An array of project types.
+   * @param array $project_metadata
+   *   Additional metadata for the project, like new_irrigation.
    *
    * @return int|bool
    *   The base estimate ID or FALSE if the estimate could not be created.
    */
-  public function createEstimate(AssetInterface $asset, array $project_types);
+  public function createEstimate(AssetInterface $asset, array $project_types, array $project_metadata = []);
 
   /**
    * Returns the co-benefits for the specified ERF method.

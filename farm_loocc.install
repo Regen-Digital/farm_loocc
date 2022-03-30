@@ -43,6 +43,14 @@ function farm_loocc_schema() {
         'not null' => TRUE,
         'default' => 25,
       ],
+      'new_irrigation' => [
+        'description' => 'If the project will be using new irrigation methods.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
       'polygon_area' => [
         'description' => 'The total polygon area used for carbon estimates.',
         'type' => 'float',

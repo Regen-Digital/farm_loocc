@@ -143,6 +143,18 @@ class CreateEstimateForm extends FormBase {
       }
     }
 
+    // Additional project metadata.
+    $form['asset_selection']['metadata'] = [
+      '#type' => 'container',
+      '#tree' => TRUE,
+    ];
+
+    // New irrigation flag.
+    $form['asset_selection']['metadata']['new_irrigation'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Will this project use new irrigation methods?'),
+    ];
+
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Create estimate'),
@@ -182,12 +194,15 @@ class CreateEstimateForm extends FormBase {
       return;
     }
 
+    // Get the submitted metadata.
+    $project_metadata = $form_state->getValue('metadata', []);
+
     // Assemble the batch operation for creating estimates.
     $operations = [];
     foreach ($assets as $asset_id => $asset) {
       $operations[] = [
         [self::class, 'createLooccEstimateBatch'],
-        [$asset_id, LooccClient::$projectTypes],
+        [$asset_id, LooccClient::$projectTypes, $project_metadata],
       ];
     }
     $batch = [
@@ -206,14 +221,14 @@ class CreateEstimateForm extends FormBase {
    *
    * Performs batch creation of LOOC-C estimates.
    */
-  public static function createLooccEstimateBatch($asset_id, $project_types, &$context) {
+  public static function createLooccEstimateBatch($asset_id, $project_types, $project_metadata, &$context) {
 
     /** @var \Drupal\farm_loocc\LooccEstimateInterface $loocc_estimate */
     $loocc_estimate = \Drupal::service('farm_loocc.estimate');
 
     // Create the estimate for the asset.
     $asset = Asset::load($asset_id);
-    if ($estimate_id = $loocc_estimate->createEstimate($asset, $project_types)) {
+    if ($estimate_id = $loocc_estimate->createEstimate($asset, $project_types, $project_metadata)) {
       $context['results'][] = ['asset' => $asset_id, 'estimate' => $estimate_id];
       $context['message'] = t('Created estimate for @asset.', ['@asset' => $asset->label()]);
     }

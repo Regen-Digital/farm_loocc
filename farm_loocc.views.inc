@@ -54,6 +54,19 @@ function farm_loocc_views_data() {
         'id' => 'date',
       ],
     ],
+    'new_irrigation' => [
+      'title' => t('New irrigation'),
+      'help' => t('If the project will be using new irrigation methods.'),
+      'field' => [
+        'id' => 'boolean',
+      ],
+      'sort' => [
+        'id' => 'boolean',
+      ],
+      'filter' => [
+        'id' => 'boolean',
+      ],
+    ],
     'warning_message' => [
       'title' => t('Warning messages'),
       'help' => t('Warning messages associated with the base carbon estimate.'),
