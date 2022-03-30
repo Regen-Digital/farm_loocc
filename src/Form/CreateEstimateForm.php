@@ -155,6 +155,17 @@ class CreateEstimateForm extends FormBase {
       '#tree' => TRUE,
     ];
 
+    // Estimated carbon improvement.
+    $form['metadata']['carbon_improvement'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Estimated Carbon % improvement'),
+      '#description' => $this->t('The estimated average percent carbon improvement over the length of the project.'),
+      '#step' => 0.1,
+      '#min' => 0,
+      '#default_value' => 1.0,
+      '#size' => 4,
+    ];
+
     // New irrigation flag.
     $form['metadata']['new_irrigation'] = [
       '#type' => 'checkbox',

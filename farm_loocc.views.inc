@@ -125,6 +125,10 @@ function farm_loocc_views_data() {
         'title' => t('Average percent organic carbon'),
         'help' => t('The estimated average percent organic carbon.'),
       ],
+      'carbon_target' => [
+        'title' => t('Target percent organic carbon'),
+        'help' => t('The target average percent organic carbon at the end of the project.'),
+      ],
     ],
     'farm_loocc_accu_estimate' => [
       'annual' => [

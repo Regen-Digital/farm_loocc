@@ -100,6 +100,7 @@ class LooccEstimate implements LooccEstimateInterface {
 
     // Add default project metatdata values.
     $project_metadata += [
+      'carbon_improvement' => 0,
       'new_irrigation' => FALSE,
     ];
 
@@ -127,6 +128,7 @@ class LooccEstimate implements LooccEstimateInterface {
       'polygon_area' => $carbon_estimates['polygonArea'],
       'bd_average' => $carbon_estimates['polygonBDAverage'],
       'carbon_average' => $carbon_estimates['polygonOCPercAverage'],
+      'carbon_target' => (float) $carbon_estimates['polygonOCPercAverage'] + $project_metadata['carbon_improvement'],
       'warning_message' => $warning_message,
     ];
 

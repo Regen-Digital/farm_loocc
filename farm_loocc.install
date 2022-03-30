@@ -72,6 +72,13 @@ function farm_loocc_schema() {
         'not null' => TRUE,
         'default' => 0.0,
       ],
+      'carbon_target' => [
+        'description' => 'The target average percent organic carbon at the end of the project period.',
+        'type' => 'float',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ],
       'warning_message' => [
         'description' => 'Warning messages associated with the direct soil measurement estimates.',
         'type' => 'text',
