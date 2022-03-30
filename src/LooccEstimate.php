@@ -4,6 +4,7 @@ namespace Drupal\farm_loocc;
 
 use Drupal\asset\Entity\AssetInterface;
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\geofield\GeoPHP\GeoPHPInterface;
 
@@ -11,6 +12,13 @@ use Drupal\geofield\GeoPHP\GeoPHPInterface;
  * A service for interacting with LOOC-C estimates.
  */
 class LooccEstimate implements LooccEstimateInterface {
+
+  /**
+   * The cache ID for the ERF cobenefits.
+   *
+   * @var string
+   */
+  public static string $erfCobenefitCacheId = 'farm_loocc_erf_cobenefits';
 
   /**
    * The database service.
@@ -41,10 +49,26 @@ class LooccEstimate implements LooccEstimateInterface {
   protected $looccClient;
 
   /**
+   * The cache service.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
+   * THe cached ERF cobenefits.
+   *
+   * @var array
+   */
+  protected $erfCobenefits;
+
+  /**
    * Constructs the LooccEstimate class.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database service.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    * @param \Drupal\geofield\GeoPHP\GeoPHPInterface $geo_PHP
@@ -52,11 +76,15 @@ class LooccEstimate implements LooccEstimateInterface {
    * @param \Drupal\farm_loocc\LooccClientInterface $loocc_client
    *   The loocc client service.
    */
-  public function __construct(Connection $connection, TimeInterface $time, GeoPHPInterface $geo_PHP, LooccClientInterface $loocc_client) {
+  public function __construct(Connection $connection, CacheBackendInterface $cache, TimeInterface $time, GeoPHPInterface $geo_PHP, LooccClientInterface $loocc_client) {
     $this->database = $connection;
+    $this->cache = $cache;
     $this->time = $time;
     $this->geoPHP = $geo_PHP;
     $this->looccClient = $loocc_client;
+
+    // Get the ERF Cobenefits.
+    $this->cacheErfCobenfits();
   }
 
   /**
@@ -173,6 +201,18 @@ class LooccEstimate implements LooccEstimateInterface {
   }
 
   /**
+   * {@inheritDoc}
+   */
+  public function getErfCobenefits(string $method_id) {
+    $mapping = [
+      'acnv' => 'avoidedclearing',
+      'emp' => 'envplantings',
+    ];
+    $method_id = $mapping[$method_id] ?? $method_id;
+    return $this->erfCobenefits[$method_id] ?? FALSE;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getProjectArea(AssetInterface $asset) {
@@ -242,6 +282,27 @@ class LooccEstimate implements LooccEstimateInterface {
         return round($total, 1);
       }, $project_estimates);
     }, $estimates);
+  }
+
+  /**
+   * Helper function to cache all ERF cobenefit values.
+   */
+  protected function cacheErfCobenfits() {
+    // First get the value from the cache.
+    if ($data = $this->cache->get(LooccEstimate::$erfCobenefitCacheId)) {
+      $this->erfCobenefits = (array) $data->data;
+      return;
+    }
+
+    // Else request all values.
+    $all_values = [];
+    foreach (LooccClient::$erfMethods as $erf_method) {
+      if ($cobenefits = $this->looccClient->getErfCobenefits($erf_method)) {
+        $all_values[$erf_method] = $cobenefits;
+      }
+    }
+    $this->erfCobenefits = $all_values;
+    $this->cache->set(LooccEstimate::$erfCobenefitCacheId, $all_values, $this->time->getCurrentTime() + (86400 * 7));
   }
 
 }

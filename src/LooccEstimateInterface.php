@@ -23,6 +23,17 @@ interface LooccEstimateInterface {
   public function createEstimate(AssetInterface $asset, array $project_types);
 
   /**
+   * Returns the co-benefits for the specified ERF method.
+   *
+   * @param string $method_id
+   *   The ERF method ID.
+   *
+   * @return array|false
+   *   Array of the ERF co-benefits or FALSE if failure.
+   */
+  public function getErfCobenefits(string $method_id);
+
+  /**
    * Returns an Asset's geometry in the format expected by the LOOC-C API.
    *
    * @param \Drupal\asset\Entity\AssetInterface $asset
