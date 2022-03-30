@@ -32,6 +32,18 @@ class ACCUEstimates extends PrerenderList {
   /**
    * {@inheritdoc}
    */
+  public function renderItems($items) {
+    $render = [
+      '#type' => 'select',
+      '#title' => NULL,
+      '#options' => $items,
+    ];
+    return \Drupal::service('renderer')->render($render);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function render_item($count, $item) { // phpcs:ignore
     /** @var \Drupal\farm_loocc\LooccEstimateInterface $looc_estimate */
     $looc_estimate = \Drupal::service('farm_loocc.estimate');
