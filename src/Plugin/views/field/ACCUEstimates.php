@@ -33,7 +33,20 @@ class ACCUEstimates extends PrerenderList {
    * {@inheritdoc}
    */
   public function render_item($count, $item) { // phpcs:ignore
-    return $item['method_id'] . ': ' . $item['annual'] . ' (' . $item['project'] . ')';
+    /** @var \Drupal\farm_loocc\LooccEstimateInterface $looc_estimate */
+    $looc_estimate = \Drupal::service('farm_loocc.estimate');
+
+    // Estimate values.
+    $method_id = $item['method_id'];
+    $annual = $item['annual'];
+    $project = $item['project'];
+
+    // Render the estimate with an improved name, if possible.
+    $method_name = $method_id;
+    if ($erf_cobenefits = $looc_estimate->getErfCobenefits($method_id)) {
+      $method_name = $erf_cobenefits['methodName'];
+    }
+    return "$method_name : $annual ($project)";
   }
 
   /**
