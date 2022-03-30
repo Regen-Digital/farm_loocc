@@ -56,10 +56,15 @@ class CreateEstimateForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-    // Let the user choose assets individually or in bulk.
-    $form['bulk'] = [
-      '#type' => 'radios',
+    // Fieldset for asset selection.
+    $form['asset_selection'] = [
+      '#type' => 'fieldset',
       '#title' => $this->t('Select land assets to include in the estimate.'),
+    ];
+
+    // Let the user choose assets individually or in bulk.
+    $form['asset_selection']['bulk'] = [
+      '#type' => 'radios',
       '#options' => [
         1 => $this->t('Bulk by land type'),
         0 => $this->t('Individual land assets'),
@@ -71,8 +76,8 @@ class CreateEstimateForm extends FormBase {
       ],
     ];
 
-    // Wrapper for the asset selection.
-    $form['asset_selection'] = [
+    // AJAX Wrapper for the asset selection.
+    $form['asset_selection']['asset_wrapper'] = [
       '#type' => 'container',
       '#attributes' => [
         'id' => 'asset-selection-wrapper',
@@ -82,7 +87,7 @@ class CreateEstimateForm extends FormBase {
     // Simple entity autocomplete for individual asset selection.
     $bulk_select = (boolean) $form_state->getValue('bulk', 1);
     if (!$bulk_select) {
-      $form['asset_selection']['asset'] = [
+      $form['asset_selection']['asset_wrapper']['asset'] = [
         '#type' => 'entity_autocomplete',
         '#title' => $this->t('Land asset'),
         '#description' => $this->t('Search for land assets by their name. Use commas to select multiple land assets.'),
@@ -98,7 +103,7 @@ class CreateEstimateForm extends FormBase {
     // Else bulk select by land type.
     else {
       $land_type_options = farm_land_type_options();
-      $form['asset_selection']['land_type'] = [
+      $form['asset_selection']['asset_wrapper']['land_type'] = [
         '#type' => 'select',
         '#title' => $this->t('Land type'),
         '#options' => $land_type_options,
@@ -126,7 +131,7 @@ class CreateEstimateForm extends FormBase {
 
         // Display checkboxes for each asset.
         $form_state->setValue('asset_bulk', []);
-        $form['asset_selection']['asset_bulk'] = [
+        $form['asset_selection']['asset_wrapper']['asset_bulk'] = [
           '#type' => 'checkboxes',
           '#title' => $this->t('Select assets'),
           '#options' => $asset_options,
@@ -136,7 +141,7 @@ class CreateEstimateForm extends FormBase {
 
         // Display message is there are no options.
         if (empty($asset_options)) {
-          $form['asset_selection']['asset_bulk'] = [
+          $form['asset_selection']['asset_wrapper']['asset_bulk'] = [
             '#markup' => $this->t('No @land_type land assets found. Make sure these land assets are not archived and have a geometry.', ['@land_type' => $land_type_options[$land_type]]),
           ];
         }
@@ -144,13 +149,14 @@ class CreateEstimateForm extends FormBase {
     }
 
     // Additional project metadata.
-    $form['asset_selection']['metadata'] = [
-      '#type' => 'container',
+    $form['metadata'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Project metadata'),
       '#tree' => TRUE,
     ];
 
     // New irrigation flag.
-    $form['asset_selection']['metadata']['new_irrigation'] = [
+    $form['metadata']['new_irrigation'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Will this project use new irrigation methods?'),
     ];
@@ -175,7 +181,7 @@ class CreateEstimateForm extends FormBase {
    *   The asset selection container.
    */
   public function assetSelectionCallback(array $form, FormStateInterface $form_state) {
-    return $form['asset_selection'];
+    return $form['asset_selection']['asset_wrapper'];
   }
 
   /**
