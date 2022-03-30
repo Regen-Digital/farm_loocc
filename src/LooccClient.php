@@ -21,6 +21,26 @@ class LooccClient extends Client implements LooccClientInterface {
   public static string $looccApiBaseUri = 'https://api.looc-c.farm/v1/';
 
   /**
+   * Valid ERF method IDS.
+   *
+   * @var string[]
+   */
+  public static array $erfMethods = [
+    'avoidedclearing',
+    'acid-new-irrigation',
+    'acid-pasture-renovation',
+    'beefherd',
+    'envplantings',
+    'hir',
+    'new-irrigation-pasture-renovation',
+    'nfmr',
+    'nutrient-acid',
+    'nutrient-irrigation',
+    'nutrient-pasture',
+    'soc-measure',
+  ];
+
+  /**
    * Valid project type ids.
    *
    * @var string[]
@@ -80,6 +100,15 @@ class LooccClient extends Client implements LooccClientInterface {
   /**
    * {@inheritdoc}
    */
+  public function getErfCobenefits(string $method_id) {
+    $post = ['method' => $method_id];
+    $res = $this->request('POST', 'erf-cobenefits/erf-method', ['json' => $post]);
+    return $this->parseJsonFromResponse($res, 'body');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getSa2(array $project_area): array {
     $res = $this->request('POST', 'soil/sa2', ['json' => $project_area]);
     $json = Json::decode($res->getBody());
@@ -115,17 +144,22 @@ class LooccClient extends Client implements LooccClientInterface {
    *
    * @param \Psr\Http\Message\ResponseInterface $response
    *   The response object.
+   * @param string|null $body_key
+   *   The key containing the body. Defaults to NULL.
    *
    * @return array|false
    *   Return the array or FALSE if an error ocurred.
    */
-  protected function parseJsonFromResponse(ResponseInterface $response) {
+  protected function parseJsonFromResponse(ResponseInterface $response, string $body_key = NULL) {
     $json = Json::decode($response->getBody());
     if (isset($json['status'])) {
       return FALSE;
     }
+    elseif (!empty($body_key) && !isset($json[$body_key])) {
+      return FALSE;
+    }
     else {
-      return $json;
+      return $body_key ? $json[$body_key] : $json;
     }
   }
 

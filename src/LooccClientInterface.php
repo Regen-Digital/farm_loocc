@@ -36,6 +36,17 @@ interface LooccClientInterface extends ClientInterface {
   public function erfEstimates(array $project_area, int $project_length = 25);
 
   /**
+   * Returns the co-benefits for the specified ERF method.
+   *
+   * @param string $method_id
+   *   The ERF method ID.
+   *
+   * @return array|false
+   *   Array of the ERF co-benefits or FALSE if failure.
+   */
+  public function getErfCobenefits(string $method_id);
+
+  /**
    * Returns the SA2 areas the given project area is located in.
    *
    * @param array $project_area
