@@ -6,6 +6,41 @@
  */
 
 /**
+ * Implements hook_requirements().
+ */
+function farm_loocc_requirements($phase) {
+  $requirements = [];
+
+  // Only perform runtime checks.
+  if ($phase == 'runtime') {
+
+    // Check the LOOC-C API connection.
+    /** @var \Drupal\farm_loocc\LooccClientInterface $looc_client */
+    $looc_client = \Drupal::service('farm_loocc.loocc_client');
+
+    $status = $looc_client->ping();
+    if (!$status) {
+      $requirements['loocc'] = [
+        'title' => t('LOOC-C API Status'),
+        'value' => t('The LOOC-C API is not responding.'),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+    // Try an authenticated request.
+    else {
+      $success = (bool) $looc_client->getErfCobenefits('hir');
+      $requirements['loocc'] = [
+        'title' => t('LOOC-C API Status'),
+        'value' => $success ? t('Connected') : t('Not connected. Check your API key.'),
+        'severity' => $success ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+      ];
+    }
+  }
+
+  return $requirements;
+}
+
+/**
  * Implements hook_schema().
  */
 function farm_loocc_schema() {
