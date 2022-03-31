@@ -105,7 +105,7 @@ class LooccEstimate implements LooccEstimateInterface {
     ];
 
     // ERF Estimates.
-    $erf_estimates = $this->looccClient->erfEstimates($project_area);
+    $erf_estimates = $this->erfEstimates($project_area);
 
     // Soil estimates.
     $soil_estimates = $this->soilEstimates($project_area, $project_types, $project_metadata['new_irrigation']);
@@ -160,39 +160,7 @@ class LooccEstimate implements LooccEstimateInterface {
       ->fetchField();
 
     // Build an array of accu estimates to relate with the base estimate.
-    $final_accu_estimates = [];
-
-    // Start with the erf estimates from veg/all.
-    foreach ($erf_estimates as $key => $value) {
-
-      // Add project warnings to the associated method_id.
-      if ($key === 'projectWarnings') {
-        foreach ($value as $warning_info) {
-          $method_id = $warning_info['method'];
-          $warning_message = implode(PHP_EOL, $warning_info['warnings']);
-          $final_accu_estimates[$method_id]['warning_message'] = $warning_message;
-        }
-        continue;
-      }
-
-      // Else extract the method id and estimate interval from the key.
-      // This should be of the format: "acnvAnnual".
-      $matches = [];
-      preg_match('/(.*)(Annual|Project)/', $key, $matches);
-
-      // Bail if not a valid accu estimate key.
-      if (count($matches) != 3) {
-        continue;
-      }
-
-      // Save the interval with the method id.
-      $method_id = strtolower($matches[1]);
-      $interval = strtolower($matches[2]);
-      $final_accu_estimates[$method_id][$interval] = $value;
-    }
-
-    // Include soil estimates.
-    $final_accu_estimates += $soil_estimates;
+    $final_accu_estimates = $erf_estimates + $soil_estimates;
 
     // Bail if there are no accu_estimates to insert.
     if (empty($final_accu_estimates)) {
@@ -267,6 +235,44 @@ class LooccEstimate implements LooccEstimateInterface {
     }
 
     return $lat_longs;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function erfEstimates(array $project_area): array {
+
+    // Start with the erf estimates from veg/all.
+    $final_estimates = [];
+    $erf_estimates = $this->looccClient->erfEstimates($project_area);
+    foreach ($erf_estimates as $key => $value) {
+
+      // Add project warnings to the associated method_id.
+      if ($key === 'projectWarnings') {
+        foreach ($value as $warning_info) {
+          $method_id = $warning_info['method'];
+          $warning_message = implode(PHP_EOL, $warning_info['warnings']);
+          $final_accu_estimates[$method_id]['warning_message'] = $warning_message;
+        }
+        continue;
+      }
+
+      // Else extract the method id and estimate interval from the key.
+      // This should be of the format: "acnvAnnual".
+      $matches = [];
+      preg_match('/(.*)(Annual|Project)/', $key, $matches);
+
+      // Bail if not a valid accu estimate key.
+      if (count($matches) != 3) {
+        continue;
+      }
+
+      // Save the interval with the method id.
+      $method_id = strtolower($matches[1]);
+      $interval = strtolower($matches[2]);
+      $final_estimates[$method_id][$interval] = $value;
+    }
+    return $final_estimates;
   }
 
   /**
