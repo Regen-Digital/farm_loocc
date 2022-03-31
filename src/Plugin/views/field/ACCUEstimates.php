@@ -72,6 +72,7 @@ class ACCUEstimates extends FieldPluginBase {
     $accu_estimates = \Drupal::database()->select('farm_loocc_accu_estimate', 'flae')
       ->fields('flae', ['estimate_id', 'method_id', 'annual', 'project', 'warning_message'])
       ->orderBy('flae.estimate_id')
+      ->orderBy('flae.annual', 'DESC')
       ->execute();
 
     // Map each accu estimate to the estimate id.
