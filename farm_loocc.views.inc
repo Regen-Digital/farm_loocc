@@ -125,6 +125,10 @@ function farm_loocc_views_data() {
         'title' => t('Average percent organic carbon'),
         'help' => t('The estimated average percent organic carbon.'),
       ],
+      'carbon_target' => [
+        'title' => t('Target percent organic carbon'),
+        'help' => t('The target average percent organic carbon at the end of the project.'),
+      ],
     ],
     'farm_loocc_accu_estimate' => [
       'annual' => [
@@ -167,16 +171,18 @@ function farm_loocc_views_data() {
   ];
 
   // Add a relationship from the farm_loocc_estimate base table to the
-  // farm_loocc_accu_estimate table.
+  // farm_loocc_accu_estimate table. This allows a view of base estimates
+  // to add a relationship to specific ACCU Estimate by method_id.
+  // See the ACCUEstimate views relationship.
   $data['farm_loocc_estimate']['accu_estimate'] = [
     'title' => t('ACCU estimate'),
-    'help' => t('LOOC-C method and project ACCU estimates.'),
+    'help' => t('An ACCU estimate.'),
     'relationship' => [
+      'label' => t('ACCU estimate'),
+      'id' => 'accu_estimate',
       'base' => 'farm_loocc_accu_estimate',
       'base field' => 'estimate_id',
       'field' => 'id',
-      'id' => 'standard',
-      'label' => t('LOOC-C ACCU estimate'),
     ],
   ];
 

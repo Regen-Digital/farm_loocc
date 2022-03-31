@@ -126,6 +126,22 @@ class LooccClient extends Client implements LooccClientInterface {
   /**
    * {@inheritdoc}
    */
+  public function socEstimate(float $land_area, float $current_soc, float $target_soc, float $bulk_density, int $depth = 30, int $project_length = 25) {
+    $post = [
+      'landArea' => $land_area,
+      'currentSOC' => $current_soc,
+      'targetSOC' => $target_soc,
+      'bulkDensity' => $bulk_density,
+      'depthcm' => $depth,
+      'projectLength' => $project_length,
+    ];
+    $res = $this->request('POST', 'soil/measured-soc-change', ['json' => $post]);
+    return $this->parseJsonFromResponse($res);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function soilEstimate(int $sa2, int $land_area, array $project_types, bool $new_irrigation = TRUE) {
     $post = [
       'sa2' => $sa2,

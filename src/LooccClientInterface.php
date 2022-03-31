@@ -66,6 +66,27 @@ interface LooccClientInterface extends ClientInterface {
   public function ping(): bool;
 
   /**
+   * Returns the measured soil organic carbon change estimate.
+   *
+   * @param float $land_area
+   *   The total project area.
+   * @param float $current_soc
+   *   The current soil organic carbon %.
+   * @param float $target_soc
+   *   The target soil organic carbon %.
+   * @param float $bulk_density
+   *   The average bulk density.
+   * @param int $depth
+   *   The measurement depth in cm, defaults to 30.
+   * @param int $project_length
+   *   The project length in years, defaults to 25.
+   *
+   * @return array|false
+   *   Array of the measured soc estimate values.
+   */
+  public function socEstimate(float $land_area, float $current_soc, float $target_soc, float $bulk_density, int $depth = 30, int $project_length = 25);
+
+  /**
    * Returns the soil estimate for projects at the given SA2 area.
    *
    * @param int $sa2
