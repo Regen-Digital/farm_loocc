@@ -1,0 +1,5 @@
+farm_loocc.settings:
+  base_route: farm_settings.settings_page
+  route_name: farm_loocc.settings
+  title: 'LOOC-C'
+  weight: 8
