@@ -119,12 +119,12 @@ class LooccEstimate implements LooccEstimateInterface {
     }
 
     // Soil organic carbon estimate.
-    $project_area = $carbon_estimates['polygonArea'];
+    $project_total_area = $carbon_estimates['polygonArea'];
     $bulk_density_estimate = round($carbon_estimates['polygonBDAverage'], 2);
     $carbon_estimate = round($carbon_estimates['polygonOCPercAverage'], 1);
     $carbon_improvement = round($project_metadata['carbon_improvement'], 1);
     $carbon_target = $carbon_estimate + $carbon_improvement;
-    if ($soc_estimate = $this->looccClient->socEstimate($project_area, $carbon_estimate, $carbon_target, $bulk_density_estimate)) {
+    if ($soc_estimate = $this->looccClient->socEstimate($project_total_area, $carbon_estimate, $carbon_target, $bulk_density_estimate)) {
       $soil_estimates['soc-measure'] = [
         'annual' => $soc_estimate['totalCO2ePolyYr'],
         'project' => $soc_estimate['totalCO2ePolyProject'],
@@ -138,7 +138,7 @@ class LooccEstimate implements LooccEstimateInterface {
       'timestamp' => $this->time->getCurrentTime(),
       'project_length' => 25,
       'new_irrigation' => $project_metadata['new_irrigation'],
-      'polygon_area' => $project_area,
+      'polygon_area' => $project_total_area,
       'bd_average' => $bulk_density_estimate,
       'carbon_average' => $carbon_estimate,
       'carbon_target' => $carbon_target,
