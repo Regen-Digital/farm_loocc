@@ -186,18 +186,18 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-        annual:
-          id: annual
-          table: farm_loocc_accu_estimate
-          field: annual
-          relationship: accu_estimate
+        nothing_1:
+          id: nothing_1
+          table: views
+          field: nothing
+          relationship: none
           group_type: group
-          admin_label: ''
-          plugin_id: numeric
-          label: 'Estimated ACCUs'
+          admin_label: 'Method ACCUs'
+          plugin_id: custom
+          label: ACCUs/yr
           exclude: false
           alter:
-            alter_text: false
+            alter_text: true
             text: ''
             make_link: false
             path: ''
@@ -224,7 +224,7 @@ display:
             preserve_tags: ''
             html: false
           element_type: ''
-          element_class: ''
+          element_class: column-method-accu
           element_label_type: ''
           element_label_class: ''
           element_label_colon: true
@@ -234,15 +234,7 @@ display:
           empty: ''
           hide_empty: false
           empty_zero: false
-          hide_alter_empty: true
-          set_precision: false
-          precision: 0
-          decimal: .
-          separator: ','
-          format_plural: false
-          format_plural_string: !!binary MQNAY291bnQ=
-          prefix: ''
-          suffix: ''
+          hide_alter_empty: false
         average_lrf_rating:
           id: average_lrf_rating
           table: farm_loocc_estimate
@@ -251,7 +243,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: farm_loocc_average_lrf_rating
-          label: 'Average LRF rating'
+          label: 'LRF Co-benefits'
           exclude: false
           alter:
             alter_text: false
@@ -281,7 +273,7 @@ display:
             preserve_tags: ''
             html: false
           element_type: ''
-          element_class: ''
+          element_class: column-method-lrf
           element_label_type: ''
           element_label_class: ''
           element_label_colon: true
@@ -600,12 +592,11 @@ display:
             id: id
             name: name
             accu_estimates: accu_estimates
+            nothing_1: nothing_1
             average_lrf_rating: average_lrf_rating
-            new_irrigation: new_irrigation
             carbon_average: carbon_average
             carbon_target: carbon_target
-            annual: annual
-            warning_message: warning_message
+            new_irrigation: new_irrigation
           default: name
           info:
             id:
@@ -629,19 +620,17 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
+            nothing_1:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             average_lrf_rating:
-              sortable: true
+              sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: true
-              responsive: ''
-            new_irrigation:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
               responsive: ''
             carbon_average:
               sortable: true
@@ -657,19 +646,12 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            annual:
+            new_irrigation:
               sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
-              responsive: ''
-            warning_message:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: true
               responsive: ''
           override: true
           sticky: false
@@ -697,19 +679,6 @@ display:
           admin_label: 'Location asset'
           plugin_id: standard
           required: true
-        accu_estimate:
-          id: accu_estimate
-          table: farm_loocc_estimate
-          field: accu_estimate
-          relationship: none
-          group_type: group
-          admin_label: 'SOC Estimate'
-          plugin_id: accu_estimate
-          required: false
-          method_id: soc-measure
-          fieldsets:
-            - more
-            - admin_label
       use_ajax: true
       group_by: false
       header: {  }

@@ -2,6 +2,7 @@
 
 namespace Drupal\farm_loocc\Plugin\views\field;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
@@ -49,12 +50,18 @@ class ACCUEstimates extends FieldPluginBase {
     $method_ids = array_column($estimates, 'method_id');
     $method_names = array_column($estimates, 'method_name');
 
-    $render = [
+    $select = [
       '#type' => 'select',
       '#title' => NULL,
       '#options' => array_combine($method_ids, $method_names),
+      '#attributes' => [
+        'data-method-estimates' => Json::encode($estimates),
+      ],
+      '#attached' => [
+        'library' => ['farm_loocc/estimate_table'],
+      ],
     ];
-    return \Drupal::service('renderer')->render($render);
+    return \Drupal::service('renderer')->render($select);
   }
 
   /**
@@ -70,7 +77,19 @@ class ACCUEstimates extends FieldPluginBase {
 
     // Query all accu estimates.
     $accu_estimates = \Drupal::database()->select('farm_loocc_accu_estimate', 'flae')
-      ->fields('flae', ['estimate_id', 'method_id', 'annual', 'project', 'warning_message'])
+      ->fields('flae', [
+        'estimate_id',
+        'method_id',
+        'annual',
+        'warning_message',
+        'great_barrier_reef',
+        'coastal_ecosystems',
+        'wetlands',
+        'threatened_ecosystems',
+        'threatened_wildlife',
+        'native_vegetation',
+        'summary',
+      ])
       ->orderBy('flae.estimate_id')
       ->orderBy('flae.annual', 'DESC')
       ->execute();

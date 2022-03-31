@@ -1,0 +1,9 @@
+/* Set a min-width for the large methods dropdown. */
+.view-farm-loocc-estimates td.views-field-accu-estimates select {
+  min-width: 250px;
+}
+
+/* Set a min-width for the LRF Co-benefits column. */
+.view-farm-loocc-estimates td.column-method-lrf {
+  min-width: 160px;
+}

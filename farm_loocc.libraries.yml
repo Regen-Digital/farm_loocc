@@ -1,0 +1,9 @@
+estimate_table:
+  css:
+    theme:
+      css/estimate_table.css: { }
+  js:
+    js/estimate_table.js: { }
+  dependencies:
+    - core/jquery
+    - core/drupal.ajax
