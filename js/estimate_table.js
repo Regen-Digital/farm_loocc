@@ -19,7 +19,7 @@
         const lrfColumn = row.querySelector('.column-method-lrf');
 
         // Display the estimate annual ACCUs.
-        accuColumn.textContent = estimate.annual;
+        accuColumn.textContent = parseInt(estimate.annual).toLocaleString();
 
         const lrfCobenefits = {
           'great_barrier_reef': 'Great barrier reef',

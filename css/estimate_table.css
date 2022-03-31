@@ -3,6 +3,12 @@
   min-width: 250px;
 }
 
+/* Style the estimated ACCUs. */
+.view-farm-loocc-estimates td.column-method-accu {
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
 /* Set a min-width for the LRF Co-benefits column. */
 .view-farm-loocc-estimates td.column-method-lrf {
   min-width: 160px;
