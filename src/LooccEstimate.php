@@ -129,6 +129,26 @@ class LooccEstimate implements LooccEstimateInterface {
         'annual' => $soc_estimate['totalCO2ePolyYr'],
         'project' => $soc_estimate['totalCO2ePolyProject'],
       ];
+
+      // Get the method's LRF rating.
+      $project_in_queensland = $this->looccClient->inQld($project_area);
+      if ($project_in_queensland && $rating = $this->looccClient->lrfRating($project_area, 'soc-measure')) {
+        $mapping = [
+          'greatBarrierReef'     => 'great_barrier_reef',
+          'coastalEcosystems'    => 'coastal_ecosystems',
+          'wetlands'             => 'wetlands',
+          'threatenedEcosystems' => 'threatened_ecosystems',
+          'threatenedWildlife'   => 'threatened_wildlife',
+          'nativeVegetation'     => 'native_vegetation',
+          'summary'              => 'summary',
+        ];
+        foreach ($rating as $rating_id => $rating_value) {
+          if (!empty($mapping[$rating_id])) {
+            $soil_estimates['soc-measure'][$mapping[$rating_id]] = $rating_value;
+          }
+        }
+      }
+
     }
 
     // Add the base estimate to the DB.
@@ -274,25 +294,32 @@ class LooccEstimate implements LooccEstimateInterface {
       $method_id = strtolower($matches[1]);
       $interval = strtolower($matches[2]);
       $final_estimates[$method_id][$interval] = $value;
+    }
 
-      // Get the method's LRF rating.
-      if ($project_in_queensland && $rating = $this->looccClient->lrfRating($project_area, $method_id)) {
-        $mapping = [
-          'greatBarrierReef' => 'great_barrier_reef',
-          'coastalEcosystems' => 'coastal_ecosystems',
-          'wetlands' => 'wetlands',
-          'threatenedEcosystems' => 'threatened_ecosystems',
-          'threatenedWildlife' => 'threatened_wildlife',
-          'nativeVegetation' => 'native_vegetation',
-          'summary' => 'summary',
-        ];
-        foreach ($rating as $rating_id => $rating_value) {
-          if (!empty($mapping[$rating_id])) {
-            $final_estimates[$method_id][$mapping[$rating_id]] = $rating_value;
+    // Add LRF ratings for each ERF method.
+    if ($project_in_queensland) {
+      foreach (array_keys($final_estimates) as $method_id) {
+
+        // Get the method's LRF rating.
+        if ($rating = $this->looccClient->lrfRating($project_area, $method_id)) {
+          $mapping = [
+            'greatBarrierReef'     => 'great_barrier_reef',
+            'coastalEcosystems'    => 'coastal_ecosystems',
+            'wetlands'             => 'wetlands',
+            'threatenedEcosystems' => 'threatened_ecosystems',
+            'threatenedWildlife'   => 'threatened_wildlife',
+            'nativeVegetation'     => 'native_vegetation',
+            'summary'              => 'summary',
+          ];
+          foreach ($rating as $rating_id => $rating_value) {
+            if (!empty($mapping[$rating_id])) {
+              $final_estimates[$method_id][$mapping[$rating_id]] = $rating_value;
+            }
           }
         }
       }
     }
+
     return $final_estimates;
   }
 
