@@ -120,10 +120,10 @@ class LooccEstimate implements LooccEstimateInterface {
 
     // Soil organic carbon estimate.
     $project_area = $carbon_estimates['polygonArea'];
-    $bulk_density_estimate = $carbon_estimates['polygonBDAverage'];
-    $carbon_estimate = $carbon_estimates['polygonOCPercAverage'];
-    $carbon_improvement = $project_metadata['carbon_improvement'];
-    $carbon_target = (float) $carbon_estimate + $carbon_improvement;
+    $bulk_density_estimate = round($carbon_estimates['polygonBDAverage'], 2);
+    $carbon_estimate = round($carbon_estimates['polygonOCPercAverage'], 1);
+    $carbon_improvement = round($project_metadata['carbon_improvement'], 1);
+    $carbon_target = $carbon_estimate + $carbon_improvement;
     if ($soc_estimate = $this->looccClient->socEstimate($project_area, $carbon_estimate, $carbon_target, $bulk_density_estimate)) {
       $soil_estimates['soc-measure'] = [
         'annual' => $soc_estimate['totalCO2ePolyYr'],
@@ -209,6 +209,10 @@ class LooccEstimate implements LooccEstimateInterface {
           'method_id' => $method_id,
           'warning_message' => NULL,
         ];
+
+        // Round ACCU values.
+        $estimate_values['annual'] = round($estimate_values['annual']);
+        $estimate_values['project'] = round($estimate_values['project']);
 
         // Use merge to insert or update existing estimates.
         $this->database->merge('farm_loocc_accu_estimate')
