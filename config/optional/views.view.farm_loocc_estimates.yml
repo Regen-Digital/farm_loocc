@@ -186,6 +186,63 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+        annual:
+          id: annual
+          table: farm_loocc_accu_estimate
+          field: annual
+          relationship: accu_estimate
+          group_type: group
+          admin_label: ''
+          plugin_id: numeric
+          label: 'Estimated ACCUs'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          set_precision: false
+          precision: 0
+          decimal: .
+          separator: ','
+          format_plural: false
+          format_plural_string: !!binary MQNAY291bnQ=
+          prefix: ''
+          suffix: ''
         average_lrf_rating:
           id: average_lrf_rating
           table: farm_loocc_estimate
@@ -235,59 +292,6 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-        new_irrigation:
-          id: new_irrigation
-          table: farm_loocc_estimate
-          field: new_irrigation
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: boolean
-          label: 'New irrigation'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          type: yes-no
-          type_custom_true: ''
-          type_custom_false: ''
-          not: false
         carbon_average:
           id: carbon_average
           table: farm_loocc_estimate
@@ -296,7 +300,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: numeric
-          label: 'Actual Carbon'
+          label: 'Current Carbon'
           exclude: false
           alter:
             alter_text: false
@@ -402,72 +406,15 @@ display:
           format_plural_string: !!binary MQNAY291bnQ=
           prefix: ''
           suffix: '%'
-        annual:
-          id: annual
-          table: farm_loocc_accu_estimate
-          field: annual
-          relationship: accu_estimate
-          group_type: group
-          admin_label: ''
-          plugin_id: numeric
-          label: 'Total Carbon'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          set_precision: false
-          precision: 0
-          decimal: .
-          separator: ','
-          format_plural: false
-          format_plural_string: !!binary MQNAY291bnQ=
-          prefix: ''
-          suffix: ' ACCUs'
-        warning_message:
-          id: warning_message
+        new_irrigation:
+          id: new_irrigation
           table: farm_loocc_estimate
-          field: warning_message
+          field: new_irrigation
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: standard
-          label: 'Warning messages'
+          plugin_id: boolean
+          label: 'New irrigation'
           exclude: false
           alter:
             alter_text: false
@@ -508,6 +455,10 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          type: yes-no
+          type_custom_true: ''
+          type_custom_false: ''
+          not: false
       pager:
         type: mini
         options:
