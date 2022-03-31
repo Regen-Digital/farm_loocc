@@ -1,3 +1,10 @@
+farm_loocc.settings:
+  path: 'farm/settings/looc-c'
+  defaults:
+    _form: Drupal\farm_loocc\Form\LooccSettingsForm
+    _title: 'LOOC-C Settings'
+  requirements:
+    _permission: 'administer farm_loocc'
 farm_loocc.create_estimate:
   path: '/looc-c/estimates/create'
   defaults:
