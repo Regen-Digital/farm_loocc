@@ -242,6 +242,9 @@ class LooccEstimate implements LooccEstimateInterface {
    */
   public function erfEstimates(array $project_area): array {
 
+    // Check if the project is in Queensland.
+    $project_in_queensland = $this->looccClient->inQld($project_area);
+
     // Start with the erf estimates from veg/all.
     $final_estimates = [];
     $erf_estimates = $this->looccClient->erfEstimates($project_area);
@@ -252,7 +255,7 @@ class LooccEstimate implements LooccEstimateInterface {
         foreach ($value as $warning_info) {
           $method_id = $warning_info['method'];
           $warning_message = implode(PHP_EOL, $warning_info['warnings']);
-          $final_accu_estimates[$method_id]['warning_message'] = $warning_message;
+          $final_estimates[$method_id]['warning_message'] = $warning_message;
         }
         continue;
       }
@@ -271,6 +274,24 @@ class LooccEstimate implements LooccEstimateInterface {
       $method_id = strtolower($matches[1]);
       $interval = strtolower($matches[2]);
       $final_estimates[$method_id][$interval] = $value;
+
+      // Get the method's LRF rating.
+      if ($project_in_queensland && $rating = $this->looccClient->lrfRating($project_area, $method_id)) {
+        $mapping = [
+          'greatBarrierReef' => 'great_barrier_reef',
+          'coastalEcosystems' => 'coastal_ecosystems',
+          'wetlands' => 'wetlands',
+          'threatenedEcosystems' => 'threatened_ecosystems',
+          'threatenedWildlife' => 'threatened_wildlife',
+          'nativeVegetation' => 'native_vegetation',
+          'summary' => 'summary',
+        ];
+        foreach ($rating as $rating_id => $rating_value) {
+          if (!empty($mapping[$rating_id])) {
+            $final_estimates[$method_id][$mapping[$rating_id]] = $rating_value;
+          }
+        }
+      }
     }
     return $final_estimates;
   }
