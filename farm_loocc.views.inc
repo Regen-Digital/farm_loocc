@@ -170,6 +170,17 @@ function farm_loocc_views_data() {
     ],
   ];
 
+  // Add a custom average_lrf_rating field to the farm_loocc_estimate table.
+  // This uses a custom views field plugin to display the average LRF rating.
+  $data['farm_loocc_estimate']['average_lrf_rating'] = [
+    'title' => t('Average LRF rating'),
+    'help' => t('The average LRF rating across ERF estimates.'),
+    'field' => [
+      'id' => 'farm_loocc_average_lrf_rating',
+      'click sortable' => TRUE,
+    ],
+  ];
+
   // Add a relationship from the farm_loocc_estimate base table to the
   // farm_loocc_accu_estimate table. This allows a view of base estimates
   // to add a relationship to specific ACCU Estimate by method_id.
