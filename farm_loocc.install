@@ -188,5 +188,25 @@ function farm_loocc_schema() {
     ],
   ];
 
+  // Add lrf ratings to farm_loocc_accu_estimate.
+  $lrf_ratings = [
+    'great_barrier_reef',
+    'coastal_ecosystems',
+    'wetlands',
+    'threatened_ecosystems',
+    'threatened_wildlife',
+    'native_vegetation',
+    'summary',
+  ];
+  foreach ($lrf_ratings as $rating) {
+    $schema['farm_loocc_accu_estimate']['fields'][$rating] = [
+      'description' => "LRF rating: $rating",
+      'type' => 'int',
+      'size' => 'tiny',
+      'unsigned' => FALSE,
+      'not null' => FALSE,
+    ];
+  }
+
   return $schema;
 }

@@ -100,6 +100,43 @@ class LooccClient extends Client implements LooccClientInterface {
   /**
    * {@inheritdoc}
    */
+  public function inQld(array $project_area): bool {
+    $post = [
+      'projectArea' => $project_area,
+    ];
+    $res = $this->request('POST', 'lrf/in-qld', ['json' => $post]);
+    return (bool) $this->parseJsonFromResponse($res, 'completelyInsideQld');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function lrfRating(array $project_area, string $method_id) {
+    $path_mapping = [
+      'soc-measure' => 'soil',
+      'hir' => 'revegetation',
+      'acnv' => 'avoided-deforestation',
+      'emp' => 'environmental-plantings',
+      // @todo Need to confirm the mapping for this method.
+      'nfmr' => 'plantation',
+    ];
+
+    // Bail if the method ID is not supported.
+    if (empty($path_mapping[$method_id])) {
+      return FALSE;
+    }
+
+    $endpoint = "lrf/$path_mapping[$method_id]";
+    $post = [
+      'projectArea' => $project_area,
+    ];
+    $res = $this->request('POST', $endpoint, ['json' => $post]);
+    return $this->parseJsonFromResponse($res);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getErfCobenefits(string $method_id) {
     $post = ['method' => $method_id];
     $res = $this->request('POST', 'erf-cobenefits/erf-method', ['json' => $post]);

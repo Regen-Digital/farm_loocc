@@ -36,6 +36,30 @@ interface LooccClientInterface extends ClientInterface {
   public function erfEstimates(array $project_area, int $project_length = 25);
 
   /**
+   * Returns if the project area is in Queensland.
+   *
+   * @param array $project_area
+   *   The project area coordinates.
+   *
+   * @return bool
+   *   Boolean indicating if the project area is in Queensland.
+   */
+  public function inQld(array $project_area): bool;
+
+  /**
+   * Returns the LRF co-benefit alignment ratings for LRF methods.
+   *
+   * @param array $project_area
+   *   The project area coordinates.
+   * @param string $method_id
+   *   The method ID.
+   *
+   * @return array|false
+   *   Array of the co-benefit alignment ratings or FALSE if not supported.
+   */
+  public function lrfRating(array $project_area, string $method_id);
+
+  /**
    * Returns the co-benefits for the specified ERF method.
    *
    * @param string $method_id

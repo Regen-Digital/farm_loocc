@@ -105,7 +105,7 @@ class LooccEstimate implements LooccEstimateInterface {
     ];
 
     // ERF Estimates.
-    $erf_estimates = $this->looccClient->erfEstimates($project_area);
+    $erf_estimates = $this->erfEstimates($project_area);
 
     // Soil estimates.
     $soil_estimates = $this->soilEstimates($project_area, $project_types, $project_metadata['new_irrigation']);
@@ -119,12 +119,12 @@ class LooccEstimate implements LooccEstimateInterface {
     }
 
     // Soil organic carbon estimate.
-    $project_area = $carbon_estimates['polygonArea'];
+    $project_total_area = $carbon_estimates['polygonArea'];
     $bulk_density_estimate = round($carbon_estimates['polygonBDAverage'], 2);
     $carbon_estimate = round($carbon_estimates['polygonOCPercAverage'], 1);
     $carbon_improvement = round($project_metadata['carbon_improvement'], 1);
     $carbon_target = $carbon_estimate + $carbon_improvement;
-    if ($soc_estimate = $this->looccClient->socEstimate($project_area, $carbon_estimate, $carbon_target, $bulk_density_estimate)) {
+    if ($soc_estimate = $this->looccClient->socEstimate($project_total_area, $carbon_estimate, $carbon_target, $bulk_density_estimate)) {
       $soil_estimates['soc-measure'] = [
         'annual' => $soc_estimate['totalCO2ePolyYr'],
         'project' => $soc_estimate['totalCO2ePolyProject'],
@@ -138,7 +138,7 @@ class LooccEstimate implements LooccEstimateInterface {
       'timestamp' => $this->time->getCurrentTime(),
       'project_length' => 25,
       'new_irrigation' => $project_metadata['new_irrigation'],
-      'polygon_area' => $project_area,
+      'polygon_area' => $project_total_area,
       'bd_average' => $bulk_density_estimate,
       'carbon_average' => $carbon_estimate,
       'carbon_target' => $carbon_target,
@@ -160,39 +160,7 @@ class LooccEstimate implements LooccEstimateInterface {
       ->fetchField();
 
     // Build an array of accu estimates to relate with the base estimate.
-    $final_accu_estimates = [];
-
-    // Start with the erf estimates from veg/all.
-    foreach ($erf_estimates as $key => $value) {
-
-      // Add project warnings to the associated method_id.
-      if ($key === 'projectWarnings') {
-        foreach ($value as $warning_info) {
-          $method_id = $warning_info['method'];
-          $warning_message = implode(PHP_EOL, $warning_info['warnings']);
-          $final_accu_estimates[$method_id]['warning_message'] = $warning_message;
-        }
-        continue;
-      }
-
-      // Else extract the method id and estimate interval from the key.
-      // This should be of the format: "acnvAnnual".
-      $matches = [];
-      preg_match('/(.*)(Annual|Project)/', $key, $matches);
-
-      // Bail if not a valid accu estimate key.
-      if (count($matches) != 3) {
-        continue;
-      }
-
-      // Save the interval with the method id.
-      $method_id = strtolower($matches[1]);
-      $interval = strtolower($matches[2]);
-      $final_accu_estimates[$method_id][$interval] = $value;
-    }
-
-    // Include soil estimates.
-    $final_accu_estimates += $soil_estimates;
+    $final_accu_estimates = $erf_estimates + $soil_estimates;
 
     // Bail if there are no accu_estimates to insert.
     if (empty($final_accu_estimates)) {
@@ -267,6 +235,65 @@ class LooccEstimate implements LooccEstimateInterface {
     }
 
     return $lat_longs;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function erfEstimates(array $project_area): array {
+
+    // Check if the project is in Queensland.
+    $project_in_queensland = $this->looccClient->inQld($project_area);
+
+    // Start with the erf estimates from veg/all.
+    $final_estimates = [];
+    $erf_estimates = $this->looccClient->erfEstimates($project_area);
+    foreach ($erf_estimates as $key => $value) {
+
+      // Add project warnings to the associated method_id.
+      if ($key === 'projectWarnings') {
+        foreach ($value as $warning_info) {
+          $method_id = $warning_info['method'];
+          $warning_message = implode(PHP_EOL, $warning_info['warnings']);
+          $final_estimates[$method_id]['warning_message'] = $warning_message;
+        }
+        continue;
+      }
+
+      // Else extract the method id and estimate interval from the key.
+      // This should be of the format: "acnvAnnual".
+      $matches = [];
+      preg_match('/(.*)(Annual|Project)/', $key, $matches);
+
+      // Bail if not a valid accu estimate key.
+      if (count($matches) != 3) {
+        continue;
+      }
+
+      // Save the interval with the method id.
+      $method_id = strtolower($matches[1]);
+      $interval = strtolower($matches[2]);
+      $final_estimates[$method_id][$interval] = $value;
+
+      // Get the method's LRF rating.
+      if ($project_in_queensland && $rating = $this->looccClient->lrfRating($project_area, $method_id)) {
+        $mapping = [
+          'greatBarrierReef' => 'great_barrier_reef',
+          'coastalEcosystems' => 'coastal_ecosystems',
+          'wetlands' => 'wetlands',
+          'threatenedEcosystems' => 'threatened_ecosystems',
+          'threatenedWildlife' => 'threatened_wildlife',
+          'nativeVegetation' => 'native_vegetation',
+          'summary' => 'summary',
+        ];
+        foreach ($rating as $rating_id => $rating_value) {
+          if (!empty($mapping[$rating_id])) {
+            $final_estimates[$method_id][$mapping[$rating_id]] = $rating_value;
+          }
+        }
+      }
+    }
+    return $final_estimates;
   }
 
   /**

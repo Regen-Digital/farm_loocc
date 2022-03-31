@@ -47,6 +47,17 @@ interface LooccEstimateInterface {
   public function getProjectArea(AssetInterface $asset);
 
   /**
+   * Helper function to return ERF method estimates with ERF ratings.
+   *
+   * @param array $project_area
+   *   The project area coordinates.
+   *
+   * @return array
+   *   Array of the available ERF method estimates.
+   */
+  public function erfEstimates(array $project_area): array;
+
+  /**
    * Helper function to return the total project estimates across all SA2 areas.
    *
    * @param array $project_area
