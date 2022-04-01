@@ -71,6 +71,12 @@ function farm_loocc_schema() {
         'not null' => TRUE,
         'default' => 0,
       ],
+      'selected_method' => [
+        'description' => 'The method selected for the project.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ],
       'project_length' => [
         'description' => 'The length of the project.',
         'type' => 'int',
