@@ -2,15 +2,79 @@
 
 namespace Drupal\farm_loocc\Controller;
 
+use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\BaseCommand;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Database\Connection;
+use Drupal\farm_loocc\LooccClientInterface;
+use Drupal\farm_loocc\LooccEstimateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller for updating estimates via AJAX requests.
  */
 class EstimateAjaxController extends ControllerBase {
+
+  /**
+   * The database.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
+   * The csrf_token service.
+   *
+   * @var \Drupal\Core\Access\CsrfTokenGenerator
+   */
+  protected $csrfToken;
+
+  /**
+   * The loocc client.
+   *
+   * @var \Drupal\farm_loocc\LooccClientInterface
+   */
+  protected $looccClient;
+
+  /**
+   * The loocc estimate service.
+   *
+   * @var \Drupal\farm_loocc\LooccEstimateInterface
+   */
+  protected $looccEstimate;
+
+  /**
+   * Constructor for the estimate ajax controller.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database service.
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token_generator
+   *   The csrf token generator service.
+   * @param \Drupal\farm_loocc\LooccClientInterface $loocc_client
+   *   The loocc client.
+   * @param \Drupal\farm_loocc\LooccEstimateInterface $loocc_estimate
+   *   The loocc estimate service.
+   */
+  public function __construct(Connection $connection, CsrfTokenGenerator $csrf_token_generator, LooccClientInterface $loocc_client, LooccEstimateInterface $loocc_estimate) {
+    $this->database = $connection;
+    $this->csrfToken = $csrf_token_generator;
+    $this->looccClient = $loocc_client;
+    $this->looccEstimate = $loocc_estimate;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('database'),
+      $container->get('csrf_token'),
+      $container->get('farm_loocc.loocc_client'),
+      $container->get('farm_loocc.estimate'),
+    );
+  }
 
   /**
    * Callback to perform an ajax operation.
@@ -30,7 +94,7 @@ class EstimateAjaxController extends ControllerBase {
     // Validate the csrf token manually. The _csrf_token route option only
     // works for links generated in PHP, not JS.
     // See https://www.drupal.org/docs/8/api/routing-system/access-checking-on-routes/csrf-access-checking
-    \Drupal::getContainer()->get('csrf_token')->validate($request->get('token'), $request->getPathInfo());
+    $this->csrfToken->validate($request->get('token'), $request->getPathInfo());
 
     // Only accept AJAX requests.
     if ($request->get('js')) {
@@ -71,26 +135,20 @@ class EstimateAjaxController extends ControllerBase {
     // Run the soc estimate if carbon values are provided.
     if (isset($values['carbon_average']) && isset($values['carbon_target'])) {
 
-      /** @var \Drupal\farm_loocc\LooccClientInterface $looc_client */
-      $looc_client = \Drupal::service('farm_loocc.loocc_client');
-
-      /** @var \Drupal\farm_loocc\LooccEstimateInterface $looc_estimate */
-      $looc_estimate = \Drupal::service('farm_loocc.estimate');
-
       // Get the base estimate area and bd_average.
-      $estimate = \Drupal::database()->select('farm_loocc_estimate', 'fle')
+      $estimate = $this->database->select('farm_loocc_estimate', 'fle')
         ->fields('fle', ['polygon_area', 'bd_average'])
         ->condition('fle.id', $estimate_id)
         ->execute()
         ->fetchObject();
 
       // Run the estimate.
-      if ($soc_estimate = $looc_client->socEstimate($estimate->polygon_area, $values['carbon_average'], $values['carbon_target'], $estimate->bd_average)) {
+      if ($soc_estimate = $this->looccClient->socEstimate($estimate->polygon_area, $values['carbon_average'], $values['carbon_target'], $estimate->bd_average)) {
         $estimate_values = [
           'annual' => $soc_estimate['totalCO2ePolyYr'],
           'project' => $soc_estimate['totalCO2ePolyProject'],
         ];
-        $looc_estimate->updateAccuEstimate($estimate_id, 'soc-measure', $estimate_values);
+        $this->looccEstimate->updateAccuEstimate($estimate_id, 'soc-measure', $estimate_values);
       }
 
       // Refresh the view.
@@ -99,7 +157,7 @@ class EstimateAjaxController extends ControllerBase {
 
     // Update the base estimate values.
     if (!empty($values)) {
-      \Drupal::database()->update('farm_loocc_estimate')
+      $this->database->update('farm_loocc_estimate')
         ->condition('id', $estimate_id)
         ->fields($values)
         ->execute();
@@ -121,10 +179,10 @@ class EstimateAjaxController extends ControllerBase {
   protected function deleteEstimate(int $estimate_id, Request $request) {
 
     // Delete esitmates.
-    \Drupal::database()->delete('farm_loocc_accu_estimate')
+    $this->database->delete('farm_loocc_accu_estimate')
       ->condition('estimate_id', $estimate_id)
       ->execute();
-    \Drupal::database()->delete('farm_loocc_estimate')
+    $this->database->delete('farm_loocc_estimate')
       ->condition('id', $estimate_id)
       ->execute();
 
