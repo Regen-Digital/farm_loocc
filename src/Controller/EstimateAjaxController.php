@@ -57,13 +57,54 @@ class EstimateAjaxController extends ControllerBase {
    *   The request.
    */
   protected function updateEstimate(int $estimate_id, Request $request) {
-    $method_id = $request->get('method_id');
-    \Drupal::database()->update('farm_loocc_estimate')
-      ->condition('id', $estimate_id)
-      ->fields(['selected_method' => $method_id])
-      ->execute();
 
-    return new AjaxResponse();
+    // Start a response.
+    $response = new AjaxResponse();
+
+    // Collect values to update.
+    $values = array_filter([
+      'selected_method' => $request->get('method_id'),
+      'carbon_average' => $request->get('carbon_average'),
+      'carbon_target' => $request->get('carbon_target'),
+    ]);
+
+    // Run the soc estimate if carbon values are provided.
+    if (isset($values['carbon_average']) && isset($values['carbon_target'])) {
+
+      /** @var \Drupal\farm_loocc\LooccClientInterface $looc_client */
+      $looc_client = \Drupal::service('farm_loocc.loocc_client');
+
+      /** @var \Drupal\farm_loocc\LooccEstimateInterface $looc_estimate */
+      $looc_estimate = \Drupal::service('farm_loocc.estimate');
+
+      // Get the base estimate area and bd_average.
+      $estimate = \Drupal::database()->select('farm_loocc_estimate', 'fle')
+        ->fields('fle', ['polygon_area', 'bd_average'])
+        ->condition('fle.id', $estimate_id)
+        ->execute()
+        ->fetchObject();
+
+      // Run the estimate.
+      if ($soc_estimate = $looc_client->socEstimate($estimate->polygon_area, $values['carbon_average'], $values['carbon_target'], $estimate->bd_average)) {
+        $estimate_values = [
+          'annual' => $soc_estimate['totalCO2ePolyYr'],
+          'project' => $soc_estimate['totalCO2ePolyProject'],
+        ];
+        $looc_estimate->updateAccuEstimate($estimate_id, 'soc-measure', $estimate_values);
+      }
+
+      // Refresh the view.
+      $response->addCommand(new BaseCommand('refresh_loocc_estimates', ''));
+    }
+
+    // Update the base estimate values.
+    if (!empty($values)) {
+      \Drupal::database()->update('farm_loocc_estimate')
+        ->condition('id', $estimate_id)
+        ->fields($values)
+        ->execute();
+    }
+    return $response;
   }
 
   /**

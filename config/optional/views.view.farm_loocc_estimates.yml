@@ -292,7 +292,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: numeric
-          label: 'Current Carbon'
+          label: 'Current Carbon %'
           exclude: false
           alter:
             alter_text: false
@@ -322,7 +322,7 @@ display:
             preserve_tags: ''
             html: false
           element_type: ''
-          element_class: ''
+          element_class: column-current-carbon
           element_label_type: ''
           element_label_class: ''
           element_label_colon: true
@@ -349,7 +349,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: numeric
-          label: 'Target Carbon'
+          label: 'Target Carbon %'
           exclude: false
           alter:
             alter_text: false
@@ -379,7 +379,7 @@ display:
             preserve_tags: ''
             html: false
           element_type: ''
-          element_class: ''
+          element_class: column-target-carbon
           element_label_type: ''
           element_label_class: ''
           element_label_colon: true
@@ -460,7 +460,7 @@ display:
           admin_label: 'Delete estimate'
           plugin_id: custom
           label: ''
-          exclude: false
+          exclude: true
           alter:
             alter_text: true
             text: ''
@@ -473,7 +473,7 @@ display:
             trim_whitespace: false
             alt: ''
             rel: ''
-            link_class: 'use-ajax action-link action-link--danger action-link--icon-trash'
+            link_class: 'use-ajax delete-estimate action-link action-link--danger action-link--icon-trash'
             prefix: ''
             suffix: ''
             target: ''
@@ -490,6 +490,104 @@ display:
             html: false
           element_type: ''
           element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: 'Update estimate'
+          plugin_id: custom
+          label: ''
+          exclude: true
+          alter:
+            alter_text: true
+            text: ''
+            make_link: true
+            path: 'looc-c/estimates/{{ id }}/update'
+            absolute: true
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: 'update-estimate action-link action-link--icon-checkmark'
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
+        nothing_3:
+          id: nothing_3
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: Actions
+          plugin_id: custom
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: "{{ nothing }}\r\n{{ nothing_2 }}"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: column-estimate-actions
           element_label_type: ''
           element_label_class: ''
           element_label_colon: false

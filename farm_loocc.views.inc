@@ -144,9 +144,10 @@ function farm_loocc_views_data() {
   foreach ($numeric_fields as $table => $table_fields) {
     foreach ($table_fields as $field_id => $field_info) {
       // Add default attributes for numeric fields.
+      $number_fields = ['carbon_average', 'carbon_target'];
       $field_info += [
         'field' => [
-          'id' => 'numeric',
+          'id' => in_array($field_id, $number_fields) ? 'farm_loocc_carbon_percent' : 'numeric',
           'click sortable' => TRUE,
         ],
         'filter' => [

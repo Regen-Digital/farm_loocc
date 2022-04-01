@@ -1,14 +1,5 @@
 /** Styles for the LOOC-C estimates table. */
 
-/* Quick icon. */
-.view-farm-loocc-estimates .action-link {
-  padding: calc(.75rem - 2px) calc(1rem - 2px) !important;
-}
-/* Center the icon. */
-.view-farm-loocc-estimates .action-link::before {
-  margin: 0 !important;
-}
-
 /* Set a min-width for the large methods dropdown. */
 .view-farm-loocc-estimates td.views-field-accu-estimates select {
   min-width: 250px;
@@ -23,4 +14,52 @@
 /* Set a min-width for the LRF Co-benefits column. */
 .view-farm-loocc-estimates td.column-method-lrf {
   min-width: 160px;
+}
+
+/* Set a min-width for the LRF Co-benefits column. */
+.view-farm-loocc-estimates td.views-field-carbon-average,
+.view-farm-loocc-estimates td.views-field-carbon-target {
+  max-width: 100px;
+}
+
+/* Actions column */
+.view-farm-loocc-estimates td.column-estimate-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 6em;
+}
+
+/* Estimate action links. */
+
+/* Center the icon in a square. */
+.view-farm-loocc-estimates .action-link {
+  padding: calc(.75rem - 2px) calc(1rem - 2px) !important;
+  margin: 0 .75rem 0 0 !important;
+}
+.view-farm-loocc-estimates .action-link::before {
+  margin: 0 !important;
+}
+
+/* Update estimate button. Copy many of the styles specific to the Gin trash action link.*/
+.view-farm-loocc-estimates .action-link.update-estimate {
+  display: none;
+  box-sizing: border-box;
+  border: 2px solid var(--colorGinPrimary);
+  border-radius: 8px;
+  transition: 0.15s;
+}
+.view-farm-loocc-estimates .action-link.update-estimate.active {
+  display: inline-block;
+}
+
+/* Active and hover behavior. */
+.view-farm-loocc-estimates .action-link.update-estimate:hover,
+.view-farm-loocc-estimates .action-link.update-estimate:active {
+  color: var(--colorGinLayerBackground);
+  background-color: var(--colorGinPrimary);
+}
+.view-farm-loocc-estimates .action-link.update-estimate:hover::before,
+.view-farm-loocc-estimates .action-link.update-estimate:active::before {
+  background-color: var(--colorGinLayerBackground);
 }

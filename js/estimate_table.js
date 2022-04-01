@@ -35,6 +35,18 @@
 
         // Find the columns cells we will update.
         const row = element.closest('tr');
+
+        // Only enable the caron input if soc-measure is selected.
+        const currentCarbonColumn = row.querySelector('.column-current-carbon input');
+        const targetCarbonColumn = row.querySelector('.column-target-carbon input');
+        if (value !== 'soc-measure') {
+          currentCarbonColumn.setAttribute('disabled', 'true');
+          targetCarbonColumn.setAttribute('disabled', 'true');
+        } else {
+          currentCarbonColumn.removeAttribute('disabled');
+          targetCarbonColumn.removeAttribute('disabled');
+        }
+
         const accuColumn = row.querySelector('.column-method-accu');
 
         // Display the estimate annual ACCUs.
@@ -105,6 +117,46 @@
         ajax.beforeSerialize = function (element, options) {
           Drupal.Ajax.prototype.beforeSerialize(element, options);
           options.data.method_id = element.options[element.selectedIndex].value;
+        }
+      });
+
+      // Display the update link when carbon values are changed.
+      once('estimate_table', '.view-farm-loocc-estimates td.column-current-carbon,td.column-target-carbon input', context).forEach(function (element) {
+        element.addEventListener('change', function (event) {
+          const row = element.closest('tr');
+          const updateLink = row.querySelector('a.update-estimate');
+          updateLink.classList.add('active');
+        });
+      });
+
+      // Add an ajax event to the update estimate button.
+      once('estimate_table', '.view-farm-loocc-estimates td a.update-estimate', context).forEach(function (element) {
+
+        // Disable clicks.
+        element.setAttribute('onclick', 'return false;');
+
+        // Build an ajax object on the update estimate link.
+        const estimate_id = element.getAttribute('data-estimate-id');
+        const path = element.getAttribute('href');
+        const url = `${path}?token=${this.csrfToken}`;
+        const elementSettings = {
+          url,
+          element,
+          progress: {
+            type: 'throbber',
+          },
+          event: 'click',
+        };
+        const ajax = Drupal.ajax(elementSettings);
+
+        // Add to the beforeSerialize method to include the carbon % values.
+        ajax.beforeSerialize = function (element, options) {
+          Drupal.Ajax.prototype.beforeSerialize(element, options);
+          const row = element.closest('tr');
+          const carbonAverage = row.querySelector('td.column-current-carbon input').value
+          const carbonTarget = row.querySelector('td.column-target-carbon input').value
+          options.data.carbon_average = carbonAverage;
+          options.data.carbon_target = carbonTarget;
         }
       });
     },
