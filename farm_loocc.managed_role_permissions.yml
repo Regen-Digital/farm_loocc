@@ -1,0 +1,5 @@
+farm_loocc:
+  default_permissions:
+    - view loocc estimates
+  config_permissions:
+    - create loocc estimates
