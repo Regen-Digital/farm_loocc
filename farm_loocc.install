@@ -161,14 +161,14 @@ function farm_loocc_schema() {
       'annual' => [
         'description' => 'The estimated annual ACCU sequestration rate.',
         'type' => 'float',
-        'unsigned' => TRUE,
+        'unsigned' => FALSE,
         'not null' => TRUE,
         'default' => 0.0,
       ],
       'project' => [
         'description' => 'The estimated total ACCUs sequestered over the project duration.',
         'type' => 'float',
-        'unsigned' => TRUE,
+        'unsigned' => FALSE,
         'not null' => TRUE,
         'default' => 0.0,
       ],
