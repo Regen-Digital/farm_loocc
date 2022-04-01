@@ -12,3 +12,10 @@ farm_loocc.create_estimate:
     _title: 'Create LOOC-C estimate'
   requirements:
     _permission: 'create loocc estimate'
+farm_loocc.update_estimate:
+  path:  '/looc-c/estimates/{estimate_id}/update'
+  defaults:
+    _controller: Drupal\farm_loocc\Controller\EstimateAjaxController::ajaxOperation
+    op: update
+  requirements:
+    _permission: 'create loocc estimate'
