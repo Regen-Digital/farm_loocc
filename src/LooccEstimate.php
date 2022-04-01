@@ -189,25 +189,7 @@ class LooccEstimate implements LooccEstimateInterface {
 
     // Save each estimate in the database.
     foreach ($final_accu_estimates as $method_id => $estimate_values) {
-
-      // Ensure both an annual and project value are provided.
-      if (isset($estimate_values['annual']) && isset($estimate_values['project'])) {
-        $estimate_values += [
-          'estimate_id' => $estimate_id,
-          'method_id' => $method_id,
-          'warning_message' => NULL,
-        ];
-
-        // Round ACCU values.
-        $estimate_values['annual'] = round($estimate_values['annual']);
-        $estimate_values['project'] = round($estimate_values['project']);
-
-        // Use merge to insert or update existing estimates.
-        $this->database->merge('farm_loocc_accu_estimate')
-          ->keys(['estimate_id' => $estimate_id, 'method_id' => $method_id])
-          ->fields($estimate_values)
-          ->execute();
-      }
+      $this->updateAccuEstimate($estimate_id, $method_id, $estimate_values);
     }
 
     return $estimate_id;
@@ -361,6 +343,31 @@ class LooccEstimate implements LooccEstimateInterface {
         return round($total, 1);
       }, $project_estimates);
     }, $estimates);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateAccuEstimate(int $estimate_id, string $method_id, array $estimate_values) {
+
+    // Ensure both an annual and project value are provided.
+    if (isset($estimate_values['annual']) && isset($estimate_values['project'])) {
+      $estimate_values += [
+        'estimate_id' => $estimate_id,
+        'method_id' => $method_id,
+        'warning_message' => NULL,
+      ];
+
+      // Round ACCU values.
+      $estimate_values['annual'] = round($estimate_values['annual']);
+      $estimate_values['project'] = round($estimate_values['project']);
+
+      // Use merge to insert or update existing estimates.
+      $this->database->merge('farm_loocc_accu_estimate')
+        ->keys(['estimate_id' => $estimate_id, 'method_id' => $method_id])
+        ->fields($estimate_values)
+        ->execute();
+    }
   }
 
   /**

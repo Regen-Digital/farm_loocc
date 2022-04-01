@@ -72,4 +72,16 @@ interface LooccEstimateInterface {
    */
   public function soilEstimates(array $project_area, array $project_types, bool $new_irrigation = FALSE): array;
 
+  /**
+   * Helper function to save an ACCU estimate to the DB.
+   *
+   * @param int $estimate_id
+   *   The estimate ID.
+   * @param string $method_id
+   *   The method ID.
+   * @param array $estimate_values
+   *   The estimate values.
+   */
+  public function updateAccuEstimate(int $estimate_id, string $method_id, array $estimate_values);
+
 }
