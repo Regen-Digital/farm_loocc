@@ -19,3 +19,11 @@ farm_loocc.update_estimate:
     op: update
   requirements:
     _permission: 'create loocc estimate'
+farm_loocc.delete_estimate:
+  path:  '/looc-c/estimates/{estimate_id}/delete'
+  defaults:
+    _controller: Drupal\farm_loocc\Controller\EstimateAjaxController::ajaxOperation
+    op: delete
+  requirements:
+    _permission: 'create loocc estimate'
+    _csrf_token: 'TRUE'

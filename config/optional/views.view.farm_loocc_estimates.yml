@@ -82,7 +82,7 @@ display:
           entity_type: asset
           entity_field: name
           plugin_id: field
-          label: 'Asset name'
+          label: Asset
           exclude: false
           alter:
             alter_text: false
@@ -451,6 +451,55 @@ display:
           type_custom_true: ''
           type_custom_false: ''
           not: false
+        nothing_2:
+          id: nothing_2
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: 'Delete estimate'
+          plugin_id: custom
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: ''
+            make_link: true
+            path: 'looc-c/estimates/{{ id }}/delete'
+            absolute: true
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: 'use-ajax action-link action-link--danger action-link--icon-trash'
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
       pager:
         type: mini
         options:
@@ -597,6 +646,7 @@ display:
             carbon_average: carbon_average
             carbon_target: carbon_target
             new_irrigation: new_irrigation
+            nothing_2: nothing_2
           default: name
           info:
             id:
@@ -649,6 +699,11 @@ display:
             new_irrigation:
               sortable: true
               default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            nothing_2:
               align: ''
               separator: ''
               empty_column: false

@@ -1,5 +1,10 @@
 (function ($, Drupal, once) {
 
+  // Provide ajax command to refresh the view.
+  Drupal.AjaxCommands.prototype.refresh_loocc_estimates = function (ajax, response, status) {
+    $('.view-farm-loocc-estimates').trigger('RefreshView');
+  };
+
   Drupal.behaviors.farm_loocc_estimate_table = {
     csrfToken: null,
     attach: function (context, settings) {
