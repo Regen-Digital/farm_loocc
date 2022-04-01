@@ -16,7 +16,6 @@
         // Find the columns cells we will update.
         const row = element.closest('tr');
         const accuColumn = row.querySelector('.column-method-accu');
-        const lrfColumn = row.querySelector('.column-method-lrf');
 
         // Display the estimate annual ACCUs.
         accuColumn.textContent = parseInt(estimate.annual).toLocaleString();
@@ -32,26 +31,31 @@
         };
 
         // Build a select for the method's LRF cobenefits.
-        if (estimate.summary) {
+        // Only update the LRF methods if the column exists.
+        // Projects outside of queensland will not have this column.
+        const lrfColumn = row.querySelector('.column-method-lrf');
+        if (lrfColumn) {
+          if (estimate.summary) {
 
-          // Create select.
-          var select = document.createElement('select');
-          select.classList.add(...['form-select', 'form-element', 'form-element--type-select']);
+            // Create select.
+            var select = document.createElement('select');
+            select.classList.add(...['form-select', 'form-element', 'form-element--type-select']);
 
-          // Add each benefits value as an option.
-          for (const [key, value] of Object.entries(lrfCobenefits)) {
-            var option = document.createElement('option');
-            option.value = key;
-            option.text = `${value}: ${estimate[key]}`
-            select.appendChild(option);
+            // Add each benefits value as an option.
+            for (const [key, value] of Object.entries(lrfCobenefits)) {
+              var option = document.createElement('option');
+              option.value = key;
+              option.text = `${value}: ${estimate[key]}`
+              select.appendChild(option);
+            }
+
+            // @todo Use element.replaceChildren() once browsers support this.
+            lrfColumn.innerHTML = '';
+            lrfColumn.appendChild(select);
           }
-
-          // @todo Use element.replaceChildren() once browsers support this.
-          lrfColumn.innerHTML = '';
-          lrfColumn.appendChild(select);
-        }
-        else {
-          lrfColumn.innerHTML = 'N/A';
+          else {
+            lrfColumn.innerHTML = 'N/A';
+          }
         }
       };
 
