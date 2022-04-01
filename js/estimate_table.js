@@ -1,7 +1,22 @@
-(function ($, Drupal) {
+(function ($, Drupal, once) {
 
   Drupal.behaviors.farm_loocc_estimate_table = {
+    csrfToken: null,
     attach: function (context, settings) {
+
+      // Get a csrfToken once.
+      if (!this.csrfToken) {
+        this.csrfToken = 'blah';
+        $.ajax({
+          async: false,
+          url: Drupal.url('session/token'),
+          success(data) {
+            if (data) {
+              this.csrfToken = data
+            }
+          },
+        });
+      }
 
       // Function to update values when the method is changed.
       const updateSelection = function(element) {
@@ -60,15 +75,33 @@
       };
 
       // Update the method values on change.
-      context.querySelectorAll('.view-farm-loocc-estimates td.views-field-accu-estimates select').forEach(function (element) {
+      once('estimate_table', '.view-farm-loocc-estimates td.views-field-accu-estimates select', context).forEach(function (element) {
         element.addEventListener('change', function (event) {
           updateSelection(event.currentTarget);
         });
 
         // Update the values on first load.
         updateSelection(element);
-      });
 
+        // Build an ajax object on the select element to update the selected method.
+        const estimate_id = element.getAttribute('data-estimate-id');
+        const url = Drupal.url(`looc-c/estimates/${estimate_id}/update?token=${this.csrfToken}`);
+        const elementSettings = {
+          url,
+          element,
+          progress: {
+            type: 'none',
+          },
+          event: 'change',
+        };
+        const ajax = Drupal.ajax(elementSettings);
+
+        // Add to the beforeSerialize function to include the select's current value in the form data.
+        ajax.beforeSerialize = function (element, options) {
+          Drupal.Ajax.prototype.beforeSerialize(element, options);
+          options.data.method_id = element.options[element.selectedIndex].value;
+        }
+      });
     },
   };
-}(jQuery, Drupal));
+}(jQuery, Drupal, once));

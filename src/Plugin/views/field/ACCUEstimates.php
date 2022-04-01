@@ -27,7 +27,10 @@ class ACCUEstimates extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function query() {
-    // Overwrite the query method to do nothing.
+    // Overwrite the query method to not query this views data field ID.
+
+    // Add the selected_method field.
+    $this->addAdditionalFields(['selected_method']);
   }
 
   /**
@@ -50,11 +53,16 @@ class ACCUEstimates extends FieldPluginBase {
     $method_ids = array_column($estimates, 'method_id');
     $method_names = array_column($estimates, 'method_name');
 
+    // Set the selected to method to the first option by default.
+    $selected_method = $values->selected_method ?? reset($method_ids);
     $select = [
       '#type' => 'select',
       '#title' => NULL,
       '#options' => array_combine($method_ids, $method_names),
+      // Use #value not #default_value since this is not a true form.
+      '#value' => $selected_method,
       '#attributes' => [
+        'data-estimate-id' => $estimate_id,
         'data-method-estimates' => Json::encode($estimates),
       ],
       '#attached' => [
