@@ -59,7 +59,11 @@ class CreateEstimateForm extends FormBase {
     // Fieldset for asset selection.
     $form['asset_selection'] = [
       '#type' => 'fieldset',
-      '#title' => $this->t('Select land assets to include in the estimate.'),
+      '#title' => $this->t('Project areas'),
+    ];
+
+    $form['asset_selection']['description'] = [
+      '#markup' => $this->t('Choose areas where land management activities will be uniform over a 25 year duration. LOOC-C estimates the carbon increase for implementing methods within the Emissions Reduction Fund (ERF) and Land Restoration Fund (LRF) programmes.'),
     ];
 
     // Let the user choose assets individually or in bulk.
@@ -151,25 +155,47 @@ class CreateEstimateForm extends FormBase {
     // Additional project metadata.
     $form['metadata'] = [
       '#type' => 'fieldset',
-      '#title' => $this->t('Project metadata'),
+      '#title' => $this->t('Project information'),
       '#tree' => TRUE,
+    ];
+
+    // Selected method.
+    $form['metadata']['auto_select_method'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Method'),
+      '#options' =>[
+        1 => $this->t('Auto-select the method with the highest ACCUs in each area.'),
+        0 => $this->t('I want to select a method to apply to these area(a).'),
+      ],
+      '#default_value' => 1,
+    ];
+    $form['metadata']['selected_method'] = [
+      '#type' => 'select',
+      '#options' => array_combine(LooccClient::$erfMethods, LooccClient::$erfMethods),
+      '#states' => [
+        'invisible' => [
+          ':input[name="metadata[auto_select_method]"]' => ['value' => 1],
+        ],
+      ],
     ];
 
     // Estimated carbon improvement.
     $form['metadata']['carbon_improvement'] = [
       '#type' => 'number',
-      '#title' => $this->t('Estimated Carbon % improvement'),
-      '#description' => $this->t('The estimated average percent carbon improvement over the length of the project.'),
+      '#title' => $this->t('Target soil carbon increase'),
+      '#description' => $this->t('The estimated percent carbon increase over the length of the project. This only applies for the Measurement of Soil Carbon Sequestration method in the ERF.'),
       '#step' => 0.1,
       '#min' => 0,
       '#default_value' => 1.0,
       '#size' => 4,
+      '#field_suffix' => $this->t('% increase'),
     ];
 
     // New irrigation flag.
     $form['metadata']['new_irrigation'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Will this project use new irrigation methods?'),
+      '#title' => $this->t('Will this project use new irrigation?'),
+      '#description' => $this->t('Some methods include new irrigation as an activity. Is it likely that you will have to get water through new water rights or new water access?')
     ];
 
     $form['submit'] = [
@@ -213,6 +239,12 @@ class CreateEstimateForm extends FormBase {
 
     // Get the submitted metadata.
     $project_metadata = $form_state->getValue('metadata', []);
+
+    // Only keep the selected method if specified.
+    if ($project_metadata['auto_select_method']) {
+      unset($project_metadata['selected_method']);
+    }
+    unset($project_metadata['auto_select_method']);
 
     // Assemble the batch operation for creating estimates.
     $operations = [];

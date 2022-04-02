@@ -8,4 +8,4 @@ farm_loocc_create_estimate:
       class:
         - 'use-ajax'
       data-dialog-type: 'modal'
-      data-dialog-options: '{"height": "auto", "width": "auto"}'
+      data-dialog-options: '{"height": "auto", "width": "700px"}'

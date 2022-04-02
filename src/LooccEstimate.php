@@ -100,6 +100,7 @@ class LooccEstimate implements LooccEstimateInterface {
 
     // Add default project metatdata values.
     $project_metadata += [
+      'selected_method' => NULL,
       'carbon_improvement' => 0,
       'new_irrigation' => FALSE,
     ];
@@ -156,6 +157,7 @@ class LooccEstimate implements LooccEstimateInterface {
     $row = [
       'asset_id' => $asset->id(),
       'timestamp' => $this->time->getCurrentTime(),
+      'selected_method' => $project_metadata['selected_method'],
       'project_length' => 25,
       'new_irrigation' => $project_metadata['new_irrigation'],
       'polygon_area' => $project_total_area,
