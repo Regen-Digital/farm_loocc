@@ -4,3 +4,32 @@
  * @file
  * Primary module hooks for farmOS LOOC-C module.
  */
+
+use Drupal\asset\Entity\AssetInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function farm_loocc_asset_delete(AssetInterface $asset) {
+
+  // Bail if the asset has no ID.
+  if (empty($asset->id())) {
+    return;
+  }
+
+  // Query to see if the asset has an estimate.
+  $estimate_query = \Drupal::database()->select('farm_loocc_estimate', 'fle')
+    ->fields('fle', ['id'])
+    ->condition('fle.asset_id', $asset->id())
+    ->execute();
+
+  // Delete estimates associated with the asset.
+  if ($estimate_id = $estimate_query->fetchField()) {
+    \Drupal::database()->delete('farm_loocc_accu_estimate')
+      ->condition('estimate_id', $estimate_id)
+      ->execute();
+    \Drupal::database()->delete('farm_loocc_estimate')
+      ->condition('id', $estimate_id)
+      ->execute();
+  }
+}
