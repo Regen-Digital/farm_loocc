@@ -10,6 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\Checkboxes;
 use Drupal\Core\Url;
 use Drupal\farm_loocc\LooccClient;
+use Drupal\farm_loocc\LooccEstimateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -26,13 +27,23 @@ class CreateEstimateForm extends FormBase {
   protected $entityTypeManager;
 
   /**
+   * The loocc estimate service.
+   *
+   * @var \Drupal\farm_loocc\LooccEstimateInterface
+   */
+  protected $looccEstimate;
+
+  /**
    * Constructs a CreateEstimateForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\farm_loocc\LooccEstimateInterface $loocc_estimate
+   *   The loocc estimate service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, LooccEstimateInterface $loocc_estimate) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->looccEstimate = $loocc_estimate;
   }
 
   /**
@@ -41,6 +52,7 @@ class CreateEstimateForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
+      $container->get('farm_loocc.estimate'),
     );
   }
 
@@ -163,7 +175,7 @@ class CreateEstimateForm extends FormBase {
     $form['metadata']['auto_select_method'] = [
       '#type' => 'radios',
       '#title' => $this->t('Method'),
-      '#options' =>[
+      '#options' => [
         1 => $this->t('Auto-select the method with the highest ACCUs in each area.'),
         0 => $this->t('I want to select a method to apply to these area(a).'),
       ],
@@ -171,7 +183,7 @@ class CreateEstimateForm extends FormBase {
     ];
     $form['metadata']['selected_method'] = [
       '#type' => 'select',
-      '#options' => array_combine(LooccClient::$erfMethods, LooccClient::$erfMethods),
+      '#options' => $this->looccEstimate->methodOptions(),
       '#states' => [
         'invisible' => [
           ':input[name="metadata[auto_select_method]"]' => ['value' => 1],
@@ -195,7 +207,7 @@ class CreateEstimateForm extends FormBase {
     $form['metadata']['new_irrigation'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Will this project use new irrigation?'),
-      '#description' => $this->t('Some methods include new irrigation as an activity. Is it likely that you will have to get water through new water rights or new water access?')
+      '#description' => $this->t('Some methods include new irrigation as an activity. Is it likely that you will have to get water through new water rights or new water access?'),
     ];
 
     $form['submit'] = [

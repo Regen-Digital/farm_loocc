@@ -47,6 +47,14 @@ interface LooccEstimateInterface {
   public function getProjectArea(AssetInterface $asset);
 
   /**
+   * Returns an array of project method ids and names.
+   *
+   * @return array
+   *   Method names keyed by method IDs.
+   */
+  public function methodOptions(): array;
+
+  /**
    * Helper function to return ERF method estimates with ERF ratings.
    *
    * @param array $project_area

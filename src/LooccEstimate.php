@@ -201,11 +201,6 @@ class LooccEstimate implements LooccEstimateInterface {
    * {@inheritDoc}
    */
   public function getErfCobenefits(string $method_id) {
-    $mapping = [
-      'acnv' => 'avoidedclearing',
-      'emp' => 'envplantings',
-    ];
-    $method_id = $mapping[$method_id] ?? $method_id;
     return $this->erfCobenefits[$method_id] ?? FALSE;
   }
 
@@ -239,6 +234,32 @@ class LooccEstimate implements LooccEstimateInterface {
     }
 
     return $lat_longs;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function methodOptions(): array {
+
+    // Build an overall mapping.
+    // Hard-code methods that don't have an ERF mapping.
+    $method_options = [
+      'ConversionToPasture' => 'Conversion to pasture',
+      'StubbleRetention' => 'Stubble Retention',
+    ];
+
+    // Start with erf methods.
+    $methods = LooccClient::$erfMethods;
+    foreach ($methods as $method_id) {
+      if ($erf_cobenefits = $this->getErfCobenefits($method_id)) {
+        $method_id = LooccClient::$erfToProjectMapping[$method_id] ?? $method_id;
+        $method_options[$method_id] = $erf_cobenefits['methodName'];
+      }
+    }
+
+    // Beefherd is not supported right now.
+    unset($method_options['beefherd']);
+    return array_reverse($method_options);
   }
 
   /**

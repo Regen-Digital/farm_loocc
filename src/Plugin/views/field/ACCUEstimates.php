@@ -104,6 +104,7 @@ class ACCUEstimates extends FieldPluginBase {
 
     // Map each accu estimate to the estimate id.
     $all_estimates = [];
+    $method_options = $looc_estimate->methodOptions();
     foreach ($accu_estimates as $result) {
 
       // Estimate values.
@@ -112,14 +113,7 @@ class ACCUEstimates extends FieldPluginBase {
       $annual = $estimate['annual'];
 
       // Render the estimate with an improved name, if possible.
-      $method_name = $method_id;
-      if ($erf_cobenefits = $looc_estimate->getErfCobenefits($method_id)) {
-        $method_name = $erf_cobenefits['methodName'];
-      }
-      // Else add spaces between each word in the method ID.
-      else {
-        $method_name = preg_replace('/[A-Z]/', ' $0', $method_name);
-      }
+      $method_name = $method_options[$method_id] ?? $method_id;
 
       // Prepend the method name with the annual ACCUs.
       $estimate['method_name'] = "$annual: $method_name";

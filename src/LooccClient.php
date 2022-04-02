@@ -57,6 +57,22 @@ class LooccClient extends Client implements LooccClientInterface {
   ];
 
   /**
+   * A very useful ERF to Project type mapping.
+   *
+   * @var array|string[]
+   */
+  public static array $erfToProjectMapping = [
+    'avoidedclearing' => 'acnv',
+    'envplantings' => 'emp',
+    'new-irrigation-pasture-renovation' => 'NewIrrigationPastureRenovation',
+    'acid-new-irrigation' => 'AcidityManagementNewIrrigation',
+    'acid-pasture-renovation' => 'AcidityManagementPasturerenovation',
+    'nutrient-acid' => 'NutrientManagementAcidityManagement',
+    'nutrient-irrigation' => 'NutrientManagementNewIrrigation',
+    'nutrient-pasture' => 'NutrientManagementPastureRenovation',
+  ];
+
+  /**
    * LooccClient constructor.
    *
    * @param string $api_key
