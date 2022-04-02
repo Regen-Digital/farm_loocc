@@ -25,8 +25,9 @@ Document installation steps.
 
 Install as you would normally install a contributed drupal module.
 
-TODO: Are there good Dupal docs for this? Do we mention composer or?
-TODO: Link to releases.
+```
+composer require 'drupal/farm_loocc:^1.0'
+```
 
 ### Configuration
 
