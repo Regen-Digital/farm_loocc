@@ -11,19 +11,19 @@ farm_loocc.create_estimate:
     _form: Drupal\farm_loocc\Form\CreateEstimateForm
     _title: 'Create LOOC-C estimate'
   requirements:
-    _permission: 'create loocc estimate'
+    _permission: 'create loocc estimates'
 farm_loocc.update_estimate:
   path:  '/looc-c/estimates/{estimate_id}/update'
   defaults:
     _controller: Drupal\farm_loocc\Controller\EstimateAjaxController::ajaxOperation
     op: update
   requirements:
-    _permission: 'create loocc estimate'
+    _permission: 'create loocc estimates'
 farm_loocc.delete_estimate:
   path:  '/looc-c/estimates/{estimate_id}/delete'
   defaults:
     _controller: Drupal\farm_loocc\Controller\EstimateAjaxController::ajaxOperation
     op: delete
   requirements:
-    _permission: 'create loocc estimate'
+    _permission: 'create loocc estimates'
     _csrf_token: 'TRUE'
