@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `deleteEstimate($asset)` function to `farm_loocc.estimate` service.
+
 ## 1.0.0 2022-04-02
 
 The initial release of this module.

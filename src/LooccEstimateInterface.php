@@ -25,6 +25,14 @@ interface LooccEstimateInterface {
   public function createEstimate(AssetInterface $asset, array $project_types, array $project_metadata = []);
 
   /**
+   * Delete estimates for the given asset.
+   *
+   * @param \Drupal\asset\Entity\AssetInterface $asset
+   *   The asset.
+   */
+  public function deleteEstimate(AssetInterface $asset);
+
+  /**
    * Returns the co-benefits for the specified ERF method.
    *
    * @param string $method_id
