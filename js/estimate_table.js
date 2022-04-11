@@ -41,7 +41,9 @@
         const targetCarbonColumn = row.querySelector('.column-target-carbon input');
         if (value !== 'soc-measure') {
           currentCarbonColumn.setAttribute('disabled', 'true');
+          currentCarbonColumn.value = currentCarbonColumn.getAttribute('data-original-value') ?? currentCarbonColumn.value;
           targetCarbonColumn.setAttribute('disabled', 'true');
+          targetCarbonColumn.value = targetCarbonColumn.getAttribute('data-original-value') ?? targetCarbonColumn.value;
         } else {
           currentCarbonColumn.removeAttribute('disabled');
           targetCarbonColumn.removeAttribute('disabled');
@@ -50,7 +52,9 @@
         const accuColumn = row.querySelector('.column-method-accu');
 
         // Display the estimate annual ACCUs.
-        accuColumn.textContent = parseInt(estimate.annual).toLocaleString();
+        const totalAccu = parseInt(estimate.annual);
+        accuColumn.textContent = totalAccu.toLocaleString();
+        accuColumn.setAttribute('data-accu-value', totalAccu);
 
         const lrfCobenefits = {
           'great_barrier_reef': 'Great barrier reef',
@@ -91,6 +95,37 @@
         }
       };
 
+      // Function to dynamically update the SOC total ACCU count.
+      const updateSocMeasure = function(row) {
+
+        // Get ACCU and carbon input values.
+        const accuColumn = row.querySelector('.column-method-accu');
+        const currentCarbonColumn = row.querySelector('.column-current-carbon input');
+        const targetCarbonColumn = row.querySelector('.column-target-carbon input');
+
+        // Calculate the initial change rate.
+        if (!accuColumn.hasAttribute('data-soc-change-rate')) {
+          const original = parseInt(accuColumn.getAttribute('data-accu-value'));
+          const percentChange = parseFloat(targetCarbonColumn.getAttribute('data-original-value') - currentCarbonColumn.getAttribute('data-original-value'));
+          const changeRate = original / percentChange;
+          accuColumn.setAttribute('data-soc-change-rate', changeRate.toString());
+        }
+
+        // Bail if the change rate is NaN. This happens when the total ACCU is first 0.
+        const changeRate = parseFloat(accuColumn.getAttribute('data-soc-change-rate'));
+        if (isNaN(changeRate)) {
+          accuColumn.innerHTML = Drupal.t('Save') + '*';
+          accuColumn.setAttribute('data-accu-value', 0);
+          return;
+        }
+
+        // Compute a new ACCU total.
+        const newChange = targetCarbonColumn.value - currentCarbonColumn.value;
+        const newTotal = Math.round(changeRate * newChange);
+        accuColumn.innerHTML = newTotal.toLocaleString() + '*';
+        accuColumn.setAttribute('data-accu-value', newTotal);
+      };
+
       // Update the method values on change.
       once('estimate_table', '.view-farm-loocc-estimates td.views-field-accu-estimates select', context).forEach(function (element) {
         element.addEventListener('change', function (event) {
@@ -123,10 +158,18 @@
       // Display the update link when carbon values are changed.
       once('estimate_table', '.view-farm-loocc-estimates td.column-current-carbon input, .view-farm-loocc-estimates td.column-target-carbon input', context).forEach(function (element) {
         element.addEventListener('change', function (event) {
+
+          // Update the SOC measure.
           const row = element.closest('tr');
+          updateSocMeasure(row);
+
+          // Display the save link.
           const updateLink = row.querySelector('a.update-estimate');
           updateLink.classList.add('active');
         });
+
+        // Save the original values so we can compute the ACCU change dynamically.
+        element.setAttribute('data-original-value', element.getAttribute('value'));
       });
 
       // Add an ajax event to the update estimate button.
