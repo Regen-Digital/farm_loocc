@@ -104,7 +104,7 @@ class EstimateAjaxController extends ControllerBase {
           return $this->updateEstimate($estimate_id, $request);
 
         case 'delete':
-          return $this->deleteEstimate($estimate_id, $request);
+          return $this->deleteEstimate($estimate_id);
       }
     }
 
@@ -170,21 +170,14 @@ class EstimateAjaxController extends ControllerBase {
    *
    * @param int $estimate_id
    *   The estimate ID.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request.
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   The AJAX response.
    */
-  protected function deleteEstimate(int $estimate_id, Request $request) {
+  protected function deleteEstimate(int $estimate_id) {
 
-    // Delete esitmates.
-    $this->database->delete('farm_loocc_accu_estimate')
-      ->condition('estimate_id', $estimate_id)
-      ->execute();
-    $this->database->delete('farm_loocc_estimate')
-      ->condition('id', $estimate_id)
-      ->execute();
+    // Delete estimates.
+    $this->looccEstimate->deleteEstimate(NULL, $estimate_id);
 
     // Update the view.
     $response = new AjaxResponse();

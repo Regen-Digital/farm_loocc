@@ -200,21 +200,30 @@ class LooccEstimate implements LooccEstimateInterface {
   /**
    * {@inheritdoc}
    */
-  public function deleteEstimate(AssetInterface $asset) {
+  public function deleteEstimate(AssetInterface $asset = NULL, int $estimate_id = NULL) {
 
-    // Bail if the asset has no ID.
-    if (empty($asset->id)) {
-      return;
+    // First find estimates associated with the asset.
+    if (!empty($asset)) {
+
+      // Bail if the asset has no ID.
+      if (empty($asset->id)) {
+        return;
+      }
+
+      // Query to see if the asset has an estimate.
+      $estimate_query = $this->database->select('farm_loocc_estimate', 'fle')
+        ->fields('fle', ['id'])
+        ->condition('fle.asset_id', $asset->id())
+        ->execute();
+
+      // Use the estimate id.
+      if ($asset_estimate_id = $estimate_query->fetchField()) {
+        $estimate_id = $asset_estimate_id;
+      }
     }
 
-    // Query to see if the asset has an estimate.
-    $estimate_query = $this->database->select('farm_loocc_estimate', 'fle')
-      ->fields('fle', ['id'])
-      ->condition('fle.asset_id', $asset->id())
-      ->execute();
-
-    // Delete estimates associated with the asset.
-    if ($estimate_id = $estimate_query->fetchField()) {
+    // Delete estimates by ID.
+    if (!empty($estimate_id)) {
       $this->database->delete('farm_loocc_accu_estimate')
         ->condition('estimate_id', $estimate_id)
         ->execute();

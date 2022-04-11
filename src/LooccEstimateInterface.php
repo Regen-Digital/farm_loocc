@@ -27,10 +27,12 @@ interface LooccEstimateInterface {
   /**
    * Delete estimates for the given asset.
    *
-   * @param \Drupal\asset\Entity\AssetInterface $asset
-   *   The asset.
+   * @param \Drupal\asset\Entity\AssetInterface|null $asset
+   *   An optional asset to delete estimates for.
+   * @param int|null $estimate_id
+   *   An optional specific estimate ID to delete.
    */
-  public function deleteEstimate(AssetInterface $asset);
+  public function deleteEstimate(AssetInterface $asset = NULL, int $estimate_id = NULL);
 
   /**
    * Returns the co-benefits for the specified ERF method.
