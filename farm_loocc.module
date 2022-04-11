@@ -8,6 +8,24 @@
 use Drupal\asset\Entity\AssetInterface;
 
 /**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function farm_loocc_asset_update(AssetInterface $asset) {
+
+  // Bail if there is no original asset.
+  if (empty($asset->original)) {
+    return;
+  }
+
+  // Delete estimates if the asset is now archived.
+  if ($asset->get('status')->value == 'archived' && $asset->original->get('status')->value != 'archived') {
+    /** @var \Drupal\farm_loocc\LooccEstimateInterface $loocc_estimate */
+    $loocc_estimate = \Drupal::service('farm_loocc.estimate');
+    $loocc_estimate->deleteEstimate($asset);
+  }
+}
+
+/**
  * Implements hook_ENTITY_TYPE_delete().
  */
 function farm_loocc_asset_delete(AssetInterface $asset) {
