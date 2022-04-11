@@ -121,7 +121,7 @@
       });
 
       // Display the update link when carbon values are changed.
-      once('estimate_table', '.view-farm-loocc-estimates td.column-current-carbon,td.column-target-carbon input', context).forEach(function (element) {
+      once('estimate_table', '.view-farm-loocc-estimates td.column-current-carbon input, .view-farm-loocc-estimates td.column-target-carbon input', context).forEach(function (element) {
         element.addEventListener('change', function (event) {
           const row = element.closest('tr');
           const updateLink = row.querySelector('a.update-estimate');
