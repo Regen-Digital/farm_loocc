@@ -13,6 +13,15 @@ use Drupal\Core\Routing\RouteMatchInterface;
  */
 function farm_loocc_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
+
+    // Module help page.
+    case 'help.page.farm_loocc':
+      $output = [
+        '#markup' => t('Provides a farmOS integration with the <a href=":link">LOOC-C calculator.</a>', [':link' => 'https://looc-c.farm/) calculator.']) . ' ' . t('For more information see <a href=":link">What is LOOC-C</a>', [':link' => 'https://looc-c.farm/about']),
+      ];
+      return $output;
+
+    // Cobenefits page.
     case 'farm_loocc.cobenefits':
       $output = [
         '#markup' => t('Select a method to view associated farm co-benefits and disbenefits.') . ' ' . t('For more information about these methods see the <a href=":link">Emissions Reduction Fund (ERF)</a>.', [':link' => 'http://www.cleanenergyregulator.gov.au/ERF']),
