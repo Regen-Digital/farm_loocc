@@ -6,6 +6,20 @@
  */
 
 use Drupal\asset\Entity\AssetInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function farm_loocc_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'farm_loocc.cobenefits':
+      $output = [
+        '#markup' => t('Select a method to view associated farm co-benefits and disbenefits.') . ' ' . t('For more information about these methods see the <a href=":link">Emissions Reduction Fund (ERF)</a>.', [':link' => 'http://www.cleanenergyregulator.gov.au/ERF']),
+      ];
+      return $output;
+  }
+}
 
 /**
  * Implements hook_ENTITY_TYPE_update().
