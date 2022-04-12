@@ -9,3 +9,9 @@ farm_loocc_create_estimate:
         - 'use-ajax'
       data-dialog-type: 'modal'
       data-dialog-options: '{"height": "auto", "width": "700px"}'
+
+farm_loocc_cobenefits:
+  route_name: farm_loocc.cobenefits
+  title: 'View co-benefits'
+  appears_on:
+    - view.farm_loocc_estimates.page

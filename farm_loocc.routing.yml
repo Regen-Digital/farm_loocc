@@ -27,3 +27,10 @@ farm_loocc.delete_estimate:
   requirements:
     _permission: 'create loocc estimates'
     _csrf_token: 'TRUE'
+farm_loocc.cobenefits:
+  path: '/looc-c/co-benefits'
+  defaults:
+    _controller: Drupal\farm_loocc\Controller\CobenefitsController::page
+    _title: 'ERF Method Co-benefits'
+  requirements:
+    _permission: 'view loocc estimates'
