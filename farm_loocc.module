@@ -31,6 +31,43 @@ function farm_loocc_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_preprocess_HOOK().
+ */
+function farm_loocc_preprocess_views_view(&$variables) {
+
+  // Bail if there is no view.
+  if (empty($variables['view'])) {
+    return;
+  }
+
+  // Only modify some views.
+  $target_view_ids = ['farm_loocc_estimates'];
+  if (!in_array($variables['view']->id(), $target_view_ids)) {
+    return;
+  }
+
+  // Only modify if there is an exposed variable.
+  if (!empty($variables['exposed'])) {
+
+    // Save the existing exposed array.
+    $exposed = $variables['exposed'];
+
+    // Build new exposed variable as a details element.
+    $variables['exposed'] = [
+      '#type' => 'details',
+      '#title' => t('Filter'),
+      '#open' => FALSE,
+      '#attached' => [
+        'library' => ['farm_loocc/views_collapsible_filters'],
+      ],
+    ];
+
+    // Add back the original exposed array.
+    $variables['exposed']['form'] = $exposed;
+  }
+}
+
+/**
  * Implements hook_ENTITY_TYPE_update().
  */
 function farm_loocc_asset_update(AssetInterface $asset) {

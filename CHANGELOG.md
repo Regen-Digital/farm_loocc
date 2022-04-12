@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Collapse views filters in loocc estimate view. [#13](https://github.com/paul121/farm_loocc/issues/13)
 - Page with tables of ERF method co-benefits. [#7](https://github.com/paul121/farm_loocc/issues/7)
 - Dynamically compute SOC values. [#11](https://github.com/paul121/farm_loocc/issues/11)
 - Delete estimates when assets are archived. [#10](https://github.com/paul121/farm_loocc/issues/10)

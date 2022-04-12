@@ -12,3 +12,7 @@ estimate_table:
     - core/once
     - core/jquery
     - core/drupal.ajax
+views_collapsible_filters:
+  css:
+    theme:
+      css/views_collapsible_filters.css: { }
