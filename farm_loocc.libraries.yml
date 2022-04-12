@@ -1,3 +1,7 @@
+cobenefits:
+  css:
+    theme:
+      css/cobenefits.css: { }
 estimate_table:
   css:
     theme:

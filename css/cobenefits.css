@@ -1,0 +1,6 @@
+/* Styles for loocc co-benefit tables. */
+table.loocc-cobenefit-table caption {
+  padding-bottom: .5em;
+  font-size: 1.5em;
+  font-weight: 400;
+}
