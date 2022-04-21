@@ -40,10 +40,18 @@
         const currentCarbonColumn = row.querySelector('.column-current-carbon input');
         const targetCarbonColumn = row.querySelector('.column-target-carbon input');
         if (value !== 'soc-measure') {
+
+          // Update current carbon.
           currentCarbonColumn.setAttribute('disabled', 'true');
-          currentCarbonColumn.value = currentCarbonColumn.getAttribute('data-original-value') ?? currentCarbonColumn.value;
+          if (currentCarbonColumn.hasAttribute('data-original-value')) {
+            currentCarbonColumn.value = currentCarbonColumn.getAttribute('data-original-value');
+          }
+
+          // Update target carbon.
           targetCarbonColumn.setAttribute('disabled', 'true');
-          targetCarbonColumn.value = targetCarbonColumn.getAttribute('data-original-value') ?? targetCarbonColumn.value;
+          if (targetCarbonColumn.hasAttribute('data-original-value')) {
+            targetCarbonColumn.value = targetCarbonColumn.getAttribute('data-original-value') ?? targetCarbonColumn.value;
+          }
         } else {
           currentCarbonColumn.removeAttribute('disabled');
           targetCarbonColumn.removeAttribute('disabled');
