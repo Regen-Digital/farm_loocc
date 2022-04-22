@@ -64,6 +64,33 @@
         accuColumn.textContent = totalAccu.toLocaleString();
         accuColumn.setAttribute('data-accu-value', totalAccu);
 
+        // Remove any existing details element.
+        const details = element.parentNode.querySelector('details.method-warning');
+        if (details) {
+          details.remove();
+        }
+
+        // If needed, add a details element with warning messages.
+        if (estimate.warning_message) {
+
+          // Details with summary.
+          const details = document.createElement("details");
+          details.classList.add('method-warning');
+          const summary = document.createElement("summary");
+          details.appendChild(summary);
+
+          // Warning message for each warning.
+          estimate.warning_message.split('\n').forEach(function (warning_message) {
+            const warning = document.createElement("div");
+            warning.classList.add('messages', 'messages--warning');
+            warning.textContent = estimate.warning_message;
+            details.appendChild(warning);
+          });
+
+          // Add after the method select dropdown.
+          element.parentNode.insertBefore(details, element.nextSibling);
+        }
+
         const lrfCobenefits = {
           'great_barrier_reef': 'Great barrier reef',
           'coastal_ecosystems': 'Coastal ecosystems',

@@ -1,8 +1,44 @@
 /** Styles for the LOOC-C estimates table. */
 
-/* Set a min-width for the large methods dropdown. */
+/* Set the Methods column to use flex. */
+.view-farm-loocc-estimates td.views-field-accu-estimates div:first-of-type {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 1em;
+}
+
+/* Make the method dropdown larger. */
 .view-farm-loocc-estimates td.views-field-accu-estimates select {
-  min-width: 250px;
+  min-width: 100px;
+  flex: 5 0;
+}
+
+/* Method warnings details element. */
+.view-farm-loocc-estimates details.method-warning {
+  flex: 1 0;
+}
+
+/* Display on separate line when open. */
+.view-farm-loocc-estimates details.method-warning[open] {
+  flex-basis: 100%;
+}
+
+/* Style the details summary with warning icon and pointer cursor. */
+.view-farm-loocc-estimates details.method-warning summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 0;
+  text-align: center;
+  background-color: initial;
+}
+.view-farm-loocc-estimates details.method-warning summary::before {
+  content: '';
+  display: inline-block;
+  height: 1.5em;
+  width: 1.5em;
+  background: url("data:image/svg+xml,%3csvg fill='%23e29700' height='16' width='16' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m14.66 12.316-5.316-10.633c-.738-1.476-1.946-1.476-2.685 0l-5.317 10.633c-.738 1.477.008 2.684 1.658 2.684h10.002c1.65 0 2.396-1.207 1.658-2.684zm-7.66-8.316h2.002v5h-2.002zm2.252 8.615c0 .344-.281.625-.625.625h-1.25c-.345 0-.626-.281-.626-.625v-1.239c0-.344.281-.625.626-.625h1.25c.344 0 .625.281.625.625z'/%3e%3c/svg%3e") no-repeat;
+  background-size: 1.5em;
 }
 
 /* Style the estimated ACCUs. */
