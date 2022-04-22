@@ -125,10 +125,12 @@ class LooccEstimate implements LooccEstimateInterface {
     $carbon_estimate = round($carbon_estimates['polygonOCPercAverage'], 1);
     $carbon_improvement = round($project_metadata['carbon_improvement'], 1);
     $carbon_target = $carbon_estimate + $carbon_improvement;
+    $warning_message = implode(PHP_EOL, $carbon_estimates['warningMessages'] ?? []);
     if ($soc_estimate = $this->looccClient->socEstimate($project_total_area, $carbon_estimate, $carbon_target, $bulk_density_estimate)) {
       $soil_estimates['soc-measure'] = [
         'annual' => $soc_estimate['totalCO2ePolyYr'],
         'project' => $soc_estimate['totalCO2ePolyProject'],
+        'warning_message' => $warning_message,
       ];
 
       // Get the method's LRF rating.
@@ -153,7 +155,6 @@ class LooccEstimate implements LooccEstimateInterface {
     }
 
     // Add the base estimate to the DB.
-    $warning_message = implode(PHP_EOL, $carbon_estimates['warningMessages'] ?? []);
     $row = [
       'asset_id' => $asset->id(),
       'timestamp' => $this->time->getCurrentTime(),
