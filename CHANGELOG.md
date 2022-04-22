@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 1.0.1 2022-04-22
+
 ### Added
 
 - Add warning indicator to display warning messages. [#3](https://github.com/paul121/farm_loocc/issues/3)
