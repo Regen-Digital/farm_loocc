@@ -24,6 +24,8 @@ jobs:
         run: docker-compose up -d
       - name: Include module dependencies
         run: |
+          docker-compose exec -u www-data -T www composer config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+          docker-compose exec -u www-data -T www composer install
           docker-compose exec -u www-data -T www composer config --merge --json extra.merge-plugin.include '["web/modules/custom/*/*.json"]'
           docker-compose exec -u www-data -T www composer update
       - name: Run PHP CodeSniffer
