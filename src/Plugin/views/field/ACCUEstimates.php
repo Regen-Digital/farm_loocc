@@ -16,6 +16,13 @@ use Drupal\views\ViewExecutable;
 class ACCUEstimates extends FieldPluginBase {
 
   /**
+   * Array of ACCU Estimates.
+   *
+   * @var array
+   */
+  protected $accuEstimates;
+
+  /**
    * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
